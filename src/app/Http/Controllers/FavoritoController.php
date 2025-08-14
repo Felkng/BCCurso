@@ -62,7 +62,12 @@ class FavoritoController extends Controller
             ]);
         }
 
-        return redirect()->back()->with('success', $message);
+        // Redirecionar de volta para a página específica baseada no tipo
+        if ($type === 'postagem') {
+            return redirect()->route('postagem.show', ['id' => $id])->with('success', $message);
+        } else {
+            return redirect()->route('tcc.view', ['id' => $id])->with('success', $message);
+        }
     }
 
     public function meusFavoritos()

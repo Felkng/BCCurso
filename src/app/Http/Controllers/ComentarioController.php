@@ -22,7 +22,7 @@ class ComentarioController extends Controller
             'user_id' => Auth::id()
         ]);
 
-        return redirect()->back()->with('success', 'Comentário adicionado com sucesso!');
+        return redirect()->route('postagem.show', ['id' => $request->postagem_id])->with('success', 'Comentário adicionado com sucesso!');
     }
 
     public function update(Request $request, $id)
@@ -35,7 +35,7 @@ class ComentarioController extends Controller
 
         // Verificar se o usuário pode editar este comentário
         if ($comentario->user_id !== Auth::id()) {
-            return redirect()->back()->with('error', 'Você não tem permissão para editar este comentário.');
+            return redirect()->route('postagem.show', ['id' => $comentario->postagem_id])->with('error', 'Você não tem permissão para editar este comentário.');
         }
 
         $comentario->update([
@@ -43,7 +43,7 @@ class ComentarioController extends Controller
             'editado_em' => now()
         ]);
 
-        return redirect()->back()->with('success', 'Comentário editado com sucesso!');
+        return redirect()->route('postagem.show', ['id' => $comentario->postagem_id])->with('success', 'Comentário editado com sucesso!');
     }
 
     public function destroy($id)
@@ -53,11 +53,12 @@ class ComentarioController extends Controller
         // Verificar se o usuário pode deletar este comentário
         $user = Auth::user();
         if ($comentario->user_id !== $user->id && !$user->hasRole('coordenador')) {
-            return redirect()->back()->with('error', 'Você não tem permissão para deletar este comentário.');
+            return redirect()->route('postagem.show', ['id' => $comentario->postagem_id])->with('error', 'Você não tem permissão para deletar este comentário.');
         }
 
+        $postagem_id = $comentario->postagem_id; // Armazenar antes de deletar
         $comentario->delete();
 
-        return redirect()->back()->with('success', 'Comentário deletado com sucesso!');
+        return redirect()->route('postagem.show', ['id' => $postagem_id])->with('success', 'Comentário deletado com sucesso!');
     }
 }

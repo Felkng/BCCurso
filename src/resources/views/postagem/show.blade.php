@@ -335,7 +335,7 @@
 </style>
 
 <div class="post-container">
-    <a href="{{ url()->previous() }}" class="back-button">
+    <a href="{{ route('postagem.display') }}" class="back-button">
         <i class="fas fa-arrow-left"></i> Voltar
     </a>
     
