@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -11,7 +11,7 @@ use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable, HasRoles;
+    use HasApiTokens, HasFactory, Notifiable, HasRoles, SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
@@ -22,9 +22,6 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'titulacao',
-        'biografia',
-        'area',
     ];
 
     /**
@@ -49,5 +46,44 @@ class User extends Authenticatable
 
     public function fotos(){
         return $this->hasMany(FotoUser::class);
+    }
+    
+  
+
+    public function servidor(){
+        return $this->hasOne(Servidor::class);
+    }
+
+    public function aluno(){
+        return $this->hasOne(Aluno::class);
+    }
+    public function comentarios()
+    {
+        return $this->hasMany(Comentario::class);
+    }
+
+    public function favoritos()
+    {
+        return $this->hasMany(Favorito::class);
+    }
+
+    public function postagensFavoritas()
+    {
+        return $this->favoritos()->where('favoritavel_type', Postagem::class)
+            ->with('favoritavel');
+    }
+
+    public function tccsFavoritos()
+    {
+        return $this->favoritos()->where('favoritavel_type', Tcc::class)
+            ->with('favoritavel');
+    }
+
+    public function jaFavoritou($modelo)
+    {
+        return $this->favoritos()
+            ->where('favoritavel_type', get_class($modelo))
+            ->where('favoritavel_id', $modelo->id)
+            ->exists();
     }
 }

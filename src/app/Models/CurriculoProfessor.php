@@ -11,10 +11,12 @@ class CurriculoProfessor extends Model
     
     protected $fillable = [
         'curriculo',
-        'link',
         'professor_id',
     ];
 
+    public function links(){
+        return $this->hasMany(Link::class);
+    }
     public function professor(){
         return $this->belongsTo(Professor::class);
     }

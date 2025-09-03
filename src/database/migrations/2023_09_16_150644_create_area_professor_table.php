@@ -13,9 +13,9 @@ return new class extends Migration
     {
         Schema::create('area_professor', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('professor_id')->constrained(
+            $table->foreignId('professor_id')->nullable()->constrained(
                 table: 'professor'
-            );
+            )->onDelete('set null');
             $table->string('area');
             $table->string('link');
             $table->timestamps();

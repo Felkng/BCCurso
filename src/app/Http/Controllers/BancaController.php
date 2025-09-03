@@ -24,9 +24,16 @@ class BancaController extends Controller
             $bancas = Banca::all();
         }
 
+        $professores_externos = ProfessorExterno::orderBy('nome')->get();
+        $professores_internos = Professor::join('servidor', 'professor.servidor_id', '=', 'servidor.id')
+                                        ->select('professor.id', 'servidor.nome') // Seleciona apenas os campos necessários
+                                        ->orderBy('servidor.nome')
+                                        ->get();
         return view('banca.index', [
             'buscar' => $buscar,
-            'bancas' => $bancas
+            'bancas' => $bancas,
+            'professores_internos' => $professores_internos,
+            'professores_externos' => $professores_externos,
         ]);
     }
 

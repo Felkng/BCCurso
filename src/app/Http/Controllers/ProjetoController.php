@@ -81,7 +81,7 @@ class ProjetoController extends Controller
      */
     public function edit(string $id)
     {
-        $projeto = Projeto::findOrFail($id);
+        $projeto = Projeto::with('imagens')->findOrFail($id);
 
         $alunos_bolsistas = $projeto->alunosBolsistas()->get();
 
@@ -99,41 +99,58 @@ class ProjetoController extends Controller
      */
     public function update(ProjetoRequest $request, string $id)
     {
-        $projeto = Projeto::findOrFail($id);
+        try {
+            $projeto = Projeto::findOrFail($id);
 
-        $projeto->update([
-            'titulo' => $request->titulo,
-            'descricao' => $request->descricao,
-            'palavras_chave' => $request->palavras_chave,
-            'data_inicio' => $request->data_inicio,
-            'data_termino' => $request->data_termino,
-            'resultados' => $request->resultados,
-            'professor_id' => $request->professor_id,
-            'fomento' => $request->fomento,
-            'link' => $request->link
-        ]);
+            $projeto->update([
+                'titulo' => $request->titulo,
+                'descricao' => $request->descricao,
+                'palavras_chave' => $request->palavras_chave,
+                'data_inicio' => $request->data_inicio,
+                'data_termino' => $request->data_termino,
+                'resultados' => $request->resultados,
+                'professor_id' => $request->professor_id,
+                'fomento' => $request->fomento,
+                'link' => $request->link
+            ]);
 
-        if ($request->hasFile("imagens")) {
-            $imagens = $request->file("imagens");
+            if ($request->hasFile("imagens")) {
+                $imagens = $request->file("imagens");
 
-            foreach ($imagens as $imagem) {
-                $imagemProjeto = new ImagemProjeto();
-                $imagemProjeto->projeto_id = $projeto->id;
-                $imagemProjeto->imagem = $imagem->store('ImagemProjeto/' . $projeto->id);
-                $imagemProjeto->save();
-                unset($imagemProjeto);
+                foreach ($imagens as $imagem) {
+                    $imagemProjeto = new ImagemProjeto();
+                    $imagemProjeto->projeto_id = $projeto->id;
+                    $imagemProjeto->imagem = $imagem->store('ImagemProjeto/' . $projeto->id);
+                    $imagemProjeto->save();
+                    unset($imagemProjeto);
+                }
             }
+
+            // Verificar se os campos estão sendo enviados antes de sincronizar
+            if ($request->has('alunos_bolsistas') && $request->alunos_bolsistas) {
+                $projeto->alunosBolsistas()->syncWithPivotValues($request->alunos_bolsistas, ['tipo' => 1]);
+            }
+
+            if ($request->has('alunos_voluntarios') && $request->alunos_voluntarios) {
+                $projeto->alunosVoluntarios()->syncWithPivotValues($request->alunos_voluntarios, ['tipo' => 2]);
+            }
+
+            if ($request->has('professores') && $request->professores) {
+                $projeto->professoresColaboradores()->sync($request->professores);
+            }
+
+            if ($request->has('professores_externos') && $request->professores_externos) {
+                $projeto->professoresExternos()->sync($request->professores_externos);
+            }
+
+            return redirect('projeto')->with('success', 'Projeto Alterado com Sucesso');
+        } catch (\Exception $e) {
+            \Log::error('Erro ao atualizar projeto: ' . $e->getMessage(), [
+                'exception' => $e,
+                'trace' => $e->getTraceAsString()
+            ]);
+            return back()->withInput()->withErrors(['error' => 'Erro ao atualizar projeto: ' . $e->getMessage()]);
         }
-
-        $projeto->alunosBolsistas()->syncWithPivotValues($request->alunos_bolsistas, ['tipo' => 1]);
-
-        $projeto->alunosVoluntarios()->syncWithPivotValues($request->alunos_voluntarios, ['tipo' => 2]);
-
-        $projeto->professoresColaboradores()->sync($request->professores);
-
-        $projeto->professoresExternos()->sync($request->professores_externos);
-
-        return redirect('projeto')->with('success', 'Projeto Alterado com Sucesso');
     }
 
     /**
@@ -200,8 +217,9 @@ class ProjetoController extends Controller
         if ($request->has('q')) {
             $search = $request->q;
             $data = DB::table("professor_externo")
-                ->select("id", "nome")
+                ->select("id", "nome", "filiacao")
                 ->where('nome', 'LIKE', "%$search%")
+                ->orWhere('filiacao', 'LIKE', "%$search%")
                 ->get();
         }
 

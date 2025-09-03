@@ -35,4 +35,19 @@ class Tcc extends Model
     public function arquivo() {
         return $this->hasOne(ArquivoTcc::class, 'id', 'arquivo_id');
     }
+
+    public function favoritos()
+    {
+        return $this->morphMany(Favorito::class, 'favoritavel');
+    }
+
+    public function totalFavoritos()
+    {
+        return $this->favoritos()->count();
+    }
+
+    public function jaFavoritadoPor($userId)
+    {
+        return $this->favoritos()->where('user_id', $userId)->exists();
+    }
 }

@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
+  <style>
+    .primary { fill: #1c2c4c; }
+    .secondary { fill: #4682b4; }
+    .light { fill: #6699cc; }
+    .accent { fill: #28a745; }
+    .white { fill: #ffffff; }
+    .light-gray { fill: #f1f5f9; }
+  </style>
+  
+  <!-- Background circle -->
+  <circle cx="256" cy="256" r="200" class="light-gray" />
+  
+  <!-- Compass -->
+  <circle cx="256" cy="256" r="130" class="white" stroke="#ddd" stroke-width="5" />
+  <circle cx="256" cy="256" r="10" class="primary" />
+  
+  <!-- Compass needle -->
+  <path d="M256,256 L256,146" stroke="#dc3545" stroke-width="8" stroke-linecap="round" />
+  <path d="M256,256 L326,326" stroke="black" stroke-width="8" stroke-linecap="round" />
+  
+  <!-- North marker -->
+  <text x="252" y="176" font-family="Arial" font-weight="bold" font-size="24" text-anchor="middle" class="primary">N</text>
+  <text x="252" y="346" font-family="Arial" font-weight="bold" font-size="24" text-anchor="middle" class="secondary">S</text>
+  <text x="346" y="260" font-family="Arial" font-weight="bold" font-size="24" text-anchor="middle" class="secondary">E</text>
+  <text x="166" y="260" font-family="Arial" font-weight="bold" font-size="24" text-anchor="middle" class="secondary">W</text>
+  
+  <!-- Decorative elements -->
+  <circle cx="256" cy="256" r="140" fill="none" stroke="#ddd" stroke-width="2" stroke-dasharray="10,5" />
+  <circle cx="256" cy="256" r="170" fill="none" stroke="#ddd" stroke-width="2" stroke-dasharray="5,10" />
+  
+  <!-- Decorative Cardinal Points -->
+  <line x1="256" y1="116" x2="256" y2="136" stroke="#ddd" stroke-width="2" />
+  <line x1="256" y1="376" x2="256" y2="396" stroke="#ddd" stroke-width="2" />
+  <line x1="116" y1="256" x2="136" y2="256" stroke="#ddd" stroke-width="2" />
+  <line x1="376" y1="256" x2="396" y2="256" stroke="#ddd" stroke-width="2" />
+  
+  <!-- Question Mark -->
+  <text x="300" y="220" font-family="Arial" font-weight="bold" font-size="100" text-anchor="middle" class="primary">?</text>
+</svg>

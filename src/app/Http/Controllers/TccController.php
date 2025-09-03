@@ -158,7 +158,15 @@ class TccController extends Controller
 
     public function destroy($id)
     {
+        // Verificar se o usuário é coordenador (middleware já garante isso, mas por segurança)
+        if (!auth()->user()->hasRole('coordenador')) {
+            abort(403, 'Acesso negado. Apenas coordenadores podem excluir TCCs.');
+        }
+
         $tcc = Tcc::findOrFail($id);
+
+        // Excluir favoritos relacionados primeiro
+        $tcc->favoritos()->delete();
 
         $tcc->delete();
 
@@ -224,7 +232,7 @@ class TccController extends Controller
 
     public function view($id)
     {
-        $tcc = Tcc::find($id);
+        $tcc = Tcc::with('favoritos')->find($id);
         $aluno = Aluno::where('id', $tcc->aluno_id)->first();
         $banca = Banca::where('id', $tcc->banca_id)->first();
         $orientador = Professor::where('professor.id', $tcc->professor_id)

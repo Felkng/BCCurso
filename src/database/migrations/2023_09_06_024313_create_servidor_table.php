@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string("email")->unique();
             $table->foreignId('usuario_id')->constrained(
                 table: 'usuario'
-            );
+            )->onDelete('cascade');
             $table->timestamps();
         });
     }

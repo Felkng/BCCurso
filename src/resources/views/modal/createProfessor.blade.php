@@ -9,13 +9,18 @@
                 </button>
             </div>
             <div class="modal-body">
-                <div class="mb-3">
-                    <label class="mt-5" for="nome">Nome</label>
-                    <input type="text" name="nome-professor" id="nome-professor" class="form-control" placeholder="Nome do professor">
-                </div>
-                <div class="mb-3">
-                    <label for="email">Email</label>
-                    <input class="form-control" id="email-professor" name="email-professor" type="email" placeholder="Email">
+                <div id="modal_professor_success" class="alert alert-success rounded-3" style="display:none;"></div>
+                <div id="modal_professor_errors" class="alert alert-danger rounded-3" style="display:none;"></div>
+                
+                <div id="form_create_professor_content">
+                    <div class="mb-3">
+                        <label class="mt-5" for="nome">Nome</label>
+                        <input type="text" name="nome-professor" id="nome-professor" class="form-control" placeholder="Nome do professor">
+                    </div>
+                    <div class="mb-3">
+                        <label for="email">Email</label>
+                        <input class="form-control" id="email-professor" name="email-professor" type="email" placeholder="Email">
+                    </div>
                 </div>
 
             </div>
@@ -78,70 +83,82 @@
                     loading();
                     if (response.error) {
                         loaded();
-                        alert(response.error);
-                    } else {
-                        // Feche o modal
-                        $('#createProfessor').modal('hide');
-
-                        // Atualiza os checkboxs na página colegiado em cadastrar professor
-                        var professoresCheckboxHTML = '';
-                        $.each(response.professores, function(index, professor) {
-                            var checkboxId = 'professor_' + professor.id;
-                            var isChecked = professoresSelecionadosAntes.includes(professor.id.toString()) ? 'checked' : '';
-                            professoresCheckboxHTML +=
-                                '<div class="form-check">' +
-                                '<input type="checkbox" class="form-check-input" name="professores_internos[]" id="' +
-                                    checkboxId + '" value="' + professor.id + '" ' + isChecked + '>' +
-                                '   <label for="' + checkboxId + '" class="form-check-label">' + professor.nome + '</label>' +
-                                '</div>';
-                        });
-
-                        $('#professores .form-check').remove();
-                        $('#professores').append(professoresCheckboxHTML);
-
-                        // Atualize o <select> na página de edição
-                        var $selectProfessor = $('#professor_id');
-                        var $selecionado = $selectProfessor.val();
-                        $selectProfessor.empty(); // Limpe todas as opções
-                        $selectProfessor.append($('<option value="" disabled selected>Selecione um orientador</option>'));
-
-
-                        // Adicione as opções atualizadas com base na resposta do servidor
-                        $.each(response.professores, function(index, professor) {
-                            $selectProfessor.append($('<option>', {
-                                value: professor.id,
-                                text: professor.nome
-                            }));
-                        });
-
-                        // Atualize o <select> de presidente
-                        var $selectPresidente = $('#presidente');
-                        var $presidenteSelecionado = $selectPresidente.val();
-                        $selectPresidente.empty(); // Limpe todas as opções
-                        $selectPresidente.append($('<option value="" disabled selected>Selecione um orientador</option>'));
-
-
-                        // Adicione as opções atualizadas com base na resposta do servidor
-                        $.each(response.professores, function(index, professor) {
-                            $selectPresidente.append($('<option>', {
-                                value: professor.id,
-                                'data-professor-id': professor.id,
-                                text: professor.nome
-                            }));
-                        });
-                        $selectPresidente.val($presidenteSelecionado);
-                        $selectProfessor.val($selecionado);
-
-                        var presidenteId = $('#presidente').val();
-                        $('#professor_' + presidenteId).prop('checked', true);
-                        $('#professor_' + presidenteId).prop('disabled', true);
-
-                        var returnToModalSelector = $('#cadastrarProfessorModal').data('return-to-modal');
-                        if (returnToModalSelector) {
-                            $(returnToModalSelector).modal('show');  // Mostrar o modal de retorno
-                        }
-
+                        showErrorMessage(response.error);
+                        return;
                     }
+                    
+                    // Feche o modal
+                    $('#createProfessor').modal('hide');
+                    
+                    // Limpe o formulário
+                    $('#nome-professor').val('');
+                    $('#email-professor').val('');
+                    
+                    // Mostra notificação de sucesso
+                    showSuccessMessage('Professor cadastrado com sucesso!');
+
+                    // Atualiza os checkboxs na página colegiado em cadastrar professor
+                    var professoresCheckboxHTML = '';
+                    $.each(response.professores, function(index, professor) {
+                        var checkboxId = 'professor_' + professor.id;
+                        var isChecked = professoresSelecionadosAntes.includes(professor.id.toString()) ? 'checked' : '';
+                        professoresCheckboxHTML +=
+                            '<div class="form-check">' +
+                            '<input type="checkbox" class="form-check-input" name="professores_internos[]" id="' +
+                                checkboxId + '" value="' + professor.id + '" ' + isChecked + '>' +
+                            '   <label for="' + checkboxId + '" class="form-check-label">' + professor.nome + '</label>' +
+                            '</div>';
+                    });
+
+                    $('#professores .form-check').remove();
+                    $('#professores').append(professoresCheckboxHTML);
+
+                    // Atualize o <select> na página de edição
+                    var $selectProfessor = $('#professor_id');
+                    var $selecionado = $selectProfessor.val();
+                    $selectProfessor.empty(); // Limpe todas as opções
+                    $selectProfessor.append($('<option value="" disabled selected>Selecione um orientador</option>'));
+
+                    $.each(response.professores, function(index, professor) {
+                        $selectProfessor.append($('<option>', {
+                            value: professor.id,
+                            text: professor.nome
+                        }));
+                    });
+
+                    var $selectPresidente = $('#presidente');
+                    var $presidenteSelecionado = $selectPresidente.val();
+                    $selectPresidente.empty(); // Limpe todas as opções
+                    $selectPresidente.append($('<option value="" disabled selected>Selecione um orientador</option>'));
+
+                    $.each(response.professores, function(index, professor) {
+                        $selectPresidente.append($('<option>', {
+                            value: professor.id,
+                            'data-professor-id': professor.id,
+                            text: professor.nome
+                        }));
+                    });
+                    $selectPresidente.val($presidenteSelecionado);
+                    $selectProfessor.val($selecionado);
+
+                    var presidenteId = $('#presidente').val();
+                    $('#professor_' + presidenteId).prop('checked', true);
+                    $('#professor_' + presidenteId).prop('disabled', true);
+
+                    var returnToModalSelector = $('#cadastrarProfessorModal').data('return-to-modal');
+                    if (returnToModalSelector) {
+                        $(returnToModalSelector).modal('show');  // Mostrar o modal de retorno
+                    }
+
+                    // Espera 1.5 segundo e fecha o modal
+                    setTimeout(function() {
+                        $('#modal_professor_success').hide();
+                        
+                        $('#nome-professor').val('');
+                        $('#email-professor').val('');
+                      
+                        $('#createProfessor').modal('hide');
+                    }, 1250);
 
                     loaded();
                 },
@@ -159,6 +176,22 @@
                 buttonCancelar.prop('disabled', false);
             }
 
+        });
+
+        // Reseta o modal para o estado inicial se ele for fechado manualmente
+        $('#createProfessor').on('hidden.bs.modal', function () {
+            $('#modal_professor_errors').hide();
+            $('#modal_professor_success').hide();
+            $('#nome-professor').val('');
+            $('#email-professor').val('');
+            $('#form_create_professor_content').show();
+            $('#buttons').show();
+            
+            // Fix para restaurar o scroll da página
+            $('body').removeClass('modal-open');
+            $('.modal-backdrop').remove();
+            $('body').css('padding-right', '');
+            $('body').css('overflow', '');
         });
 
     });

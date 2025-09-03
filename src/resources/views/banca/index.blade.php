@@ -3,43 +3,42 @@
 @section('title', 'Banca')
 
 @section('content')
-<div class="custom-container">
-    <div>
-        <div>
-            <i class="fas fa-chalkboard fa-2x"></i>
-            <h3 class="smaller-font">Gerenciar Banca</h3>
+<div class="page-header">
+    <div class="container">
+        <div class="title-container">
+            <div class="page-title">
+                <i class="fas fa-chalkboard fa-2x"></i>
+                <h2>Gerenciar Banca</h2>
+            </div>
+            
+            <div class="row campo-busca">
+                <div class="col-md-12">
+                    <input type="text" id="searchInput" class="form-control" placeholder="Buscar em todos os campos" aria-label="Buscar">
+                </div>
+            </div>
         </div>
     </div>
 </div>
+
 <div class="container">
-
-
-    <br>
-    <div class="row campo-busca">
-        <div class="col-md-12">
-            <input type="text" id="searchInput" class="form-control" placeholder="Buscar em todos os campos" aria-label="Buscar">
+    <div class="content-card">
+        <div class="card-header">
+            <span>Banca</span>
+            <a href="{{ route('banca.create') }}" class="btn btn-cadastrar">
+                <i class="fas fa-plus"></i> Cadastrar
+            </a>
         </div>
-    </div>
-    <br>
-
-    <div>
-        <div class="col-md-12">
-            <div class="card">
-                <div class="card-header text-white div-form">
-                    Banca
-                    <a href="{{ route('banca.create') }}" class="btn btn-success btn-sm float-end">Cadastrar</a>
-                </div>
-                <div class="card-body">
-
-                    <table id="bancaTable" class="table table-hover">
-                        <thead>
-                            <tr>
-                                <th>Data</th>
-                                <th>Local</th>
-                                <th>Membros</th>
-                                <th>Ação</th>
-                            </tr>
-                        </thead>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table id="bancaTable" class="table data-table">
+                    <thead>
+                        <tr>
+                            <th>Data</th>
+                            <th>Local</th>
+                            <th>Membros</th>
+                            <th>Ação</th>
+                        </tr>
+                    </thead>
                         <tbody>
                             @foreach ($bancas as $banca)
                             <tr>
@@ -69,13 +68,15 @@
                                     @endif
                                 </td>
                                 <td>
-                                    <form method="POST" action="{{ route('banca.destroy', $banca->id) }}">
-                                        @csrf
-                                        <a class="btn btn-success btn-sm" href="{{ route('banca.show', ['id' => $banca->id]) }}"><i class="fa-solid fa-eye"></i></a>
-                                        <input name="_method" type="hidden" value="DELETE">
-                                        <a href="{{ route('banca.edit', $banca->id) }}" class="btn btn-primary btn-sm"><i class="fas fa-pencil-alt"></i></a>
-                                        <button type="submit" class="btn btn-danger btn-sm" title='Delete' onclick="return confirm('Deseja realmente excluir essa banca?')"><i class="fas fa-trash"></i></button>
-                                    </form>
+                                    <div class="action-buttons">
+                                        <a class="btn-view" href="{{ route('banca.show', ['id' => $banca->id]) }}"><i class="fa-solid fa-eye"></i></a>
+                                        <a href="{{ route('banca.edit', $banca->id) }}" class="btn-edit"><i class="fas fa-pencil-alt"></i></a>
+                                        <form method="POST" action="{{ route('banca.destroy', $banca->id) }}" style="display: inline;">
+                                            @csrf
+                                            <input name="_method" type="hidden" value="DELETE">
+                                            <button type="button" class="btn-delete" title='Delete' onclick="confirmDeleteGeneric(this.form, 'Deseja realmente excluir esta banca?', 'Banca do TCC: {{ $banca->tcc->titulo ?? "N/A" }}')"><i class="fas fa-trash"></i></button>
+                                        </form>
+                                    </div>
                                 </td>
                             </tr>
                             @endforeach
@@ -103,4 +104,7 @@
         });
     });
 </script>
+
+@include('modal.confirmDeleteGeneric')
+
 @stop

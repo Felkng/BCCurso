@@ -2,14 +2,23 @@
 @section('title', 'TCC')
 @section('content')
 
-    <div class="custom-container">
-        <div>
-            <div>
-                <i class="fas fa-graduation-cap fa-2x"></i>
-                <h3 class="smaller-font">TCC</h3>
+    <div class="page-header">
+        <div class="container">
+            <div class="title-container">
+                <div class="page-title">
+                    <i class="fas fa-graduation-cap fa-2x"></i>
+                    <h2>TCCs</h2>
+                </div>
+                
+                <div class="row campo-busca">
+                    <div class="col-md-12">
+                        <input type="text" id="searchInput" class="form-control" placeholder="Buscar nome do projeto" aria-label="Buscar">
+                    </div>
+                </div>
             </div>
         </div>
     </div>
+    
     <br>
 
     <ul class="nav nav-tabs container" id="myTabs">
@@ -108,4 +117,29 @@
             });
         });
     </script>
+    <script>
+        $(document).ready(function() {
+            $("#searchInput").on("keyup", function() {
+                var searchText = $(this).val().toLowerCase();
+
+                    $('.tcc-item').filter(function() {
+                        var itemText = $(this).find('a').text().toLowerCase();
+                        if (itemText.indexOf(searchText) > -1) {
+                            $(this).removeClass('is-hidden');
+                        } else {
+                            $(this).addClass('is-hidden');
+                        }
+                    });
+
+                    $('.professor-section, .ano-section').each(function() {
+                        if ($(this).find('.tcc-item:not(.is-hidden)').length > 0) {
+                            $(this).show(); // If yes, make sure the group is visible
+                        } else {
+                            $(this).hide(); // If no, hide the entire group
+                        }
+                    });
+            });
+        });
+    </script>
+
 @endsection

@@ -3,77 +3,91 @@
 @section('title', 'Cursos')
 
 @section('content')
-<div class="custom-container">
-    <div>
-        <div>
-            <i class="fas fa-person-chalkboard fa-2x"></i>
-            <h3 class="smaller-font">Gerenciar Cursos</h3>
+<div class="page-header">
+    <div class="container">
+        <div class="title-container">
+            <div class="page-title">
+                <i class="fas fa-person-chalkboard fa-2x"></i>
+                <h2>Gerenciar Cursos</h2>
+            </div>
+            
+            <div class="row campo-busca">
+                <div class="col-md-12">
+                    <input type="text" id="searchInput" class="form-control" placeholder="Buscar em todos os campos" aria-label="Buscar">
+                </div>
+            </div>
         </div>
     </div>
 </div>
+
 <div class="container">
-    <div class="row campo-busca">
-        <div class="col-md-12">
-            <input type="text" id="searchInput" class="form-control field-search" placeholder="Buscar em todos os campos" aria-label="Buscar">
+    <div class="content-card">
+        <div class="card-header">
+            <span>Cursos</span>
+            {{-- <a href="{{ route('curso.create') }}" class="btn-cadastrar">
+                <i class="fas fa-plus"></i> Cadastrar
+            </a> --}}
         </div>
-    </div>
-    <div>
-        <div class="col-md-12">
-            <div class="card">
-                <div class="card-header text-white div-form">
-                    Cursos
-                    <a href="{{ route('curso.create') }}" class="btn btn-success btn-sm float-end">Cadastrar</a>
-                </div>
-                <div class="card-body">
-
-                    <table id="cursoTable" class="table table-hover">
-                        <thead>
-                            <tr>
-                                <th>Nome</th>
-                                <th>Sigla</th>
-                                <th>Turno</th>
-                                <th>Carga Horária</th>
-                                <th>Calendario</th>
-                                <th>Horario</th>
-                                <th>Criação</th>
-                                <th>Ação</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($cursos as $curso)
-                            <tr>
-                                <td>{{ $curso->nome }}</td>
-                                <td>{{ $curso->sigla }}</td>
-                                <td>{{ $curso->turno }}</td>
-                                <td>{{ $curso->carga_horaria }} Hrs</td>
-                                <td>
-                                    @if ($curso->calendario)
-                                    <a href="{{ route('curso.download_calendario', ['id' => $curso->id]) }}" class="btn btn-primary">Baixar Calendário</a>
-                                    @endif
-                                </td>
-                                <td>
-                                    @if ($curso->horario)
-                                    <a href="{{route('curso.download_horario',['id'=>$curso->id]) }}" class="btn btn-primary">Baixar Horário</a>
-                                    @endif
-                                </td>
-                                <td>{{ date_format($curso->created_at, 'd/m/Y H:i:s') }}</td>
-                                <td>
-                                    <form method="POST" action="{{ route('curso.destroy', $curso->id) }}">
-                                        @csrf
-                                        <a class="btn btn-success btn-sm" href="{{ route('curso.show', ['id' => $curso->id]) }}"><i class="fa-solid fa-eye"></i></a>
-                                        <input name="_method" type="hidden" value="DELETE">
-                                        <a class="btn btn-primary btn-sm" href="{{ route('curso.edit', $curso->id) }}"><i class="fas fa-pencil-alt"></i></a>
-                                        <button type="submit" class="btn btn-danger btn-sm" title='Delete' onclick="return confirm('Deseja realmente excluir esse curso?')"><i class="fas fa-trash"></i></button>
-                                        <a class="btn btn-primary btn-sm" href="{{ route('curso.coordenador', $curso->id) }}">Coordenador</a>
-                                        <a href="{{ route('ppc.index', ['cursoId' => $curso->id]) }}" class="btn btn-primary">Ver PPCs</a>
-                                    </form>
-                                </td>
-                            </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-
-                </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table id="cursoTable" class="table data-table">
+                    <thead>
+                        <tr>
+                            <th>Nome</th>
+                            <th>Sigla</th>
+                            <th>Turno</th>
+                            <th>Carga Horária</th>
+                            <th>Calendario</th>
+                            <th>Horario</th>
+                            <th>Criação</th>
+                            <th>Ação</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($cursos as $curso)
+                        <tr>
+                            <td>
+                                <span class="data-title" data-toggle="tooltip" data-placement="top" title="{{ $curso->nome }}">
+                                    {{ $curso->nome }}
+                                </span>
+                            </td>
+                            <td>{{ $curso->sigla }}</td>
+                            <td>{{ $curso->turno }}</td>
+                            <td>{{ $curso->carga_horaria }} Hrs</td>
+                            <td>
+                                @if ($curso->calendario)
+                                <a href="{{ route('curso.download_calendario', ['id' => $curso->id]) }}" class="btn btn-primary btn-sm">Baixar Calendário</a>
+                                @endif
+                            </td>
+                            <td>
+                                @if ($curso->horario)
+                                <a href="{{route('curso.download_horario',['id'=>$curso->id]) }}" class="btn btn-primary btn-sm">Baixar Horário</a>
+                                @endif
+                            </td>
+                            <td><span class="data-date">{{ date_format($curso->created_at, 'd/m/Y H:i:s') }}</span></td>
+                            <td>
+                                <form method="POST" action="{{ route('curso.destroy', $curso->id) }}">
+                                    @csrf
+                                    <div class="action-buttons">
+                                        <a class="btn-view" href="{{ route('curso.show', ['id' => $curso->id]) }}" title="Visualizar">
+                                            <i class="fa-solid fa-eye"></i>
+                                        </a>
+                                        {{-- <input name="_method" type="hidden" value="DELETE"> --}}
+                                        <a class="btn-edit" href="{{ route('curso.edit', $curso->id) }}" title="Editar">
+                                            <i class="fas fa-pencil-alt"></i>
+                                        </a>
+                                        {{-- <button type="submit" class="btn-delete" title="Excluir" onclick="return confirm('Deseja realmente excluir esse curso?')"><i class="fas fa-trash"></i></button>
+                                        <a class="btn-edit" href="{{ route('curso.coordenador', $curso->id) }}">Coordenador</a> --}}
+                                        <a href="{{ route('ppc.index', ['cursoId' => $curso->id]) }}" class="btn-edit" title="Ver PPCs">
+                                            <i class="fas fa-file-alt"></i>
+                                        </a>
+                                    </div>
+                                </form>
+                            </td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>

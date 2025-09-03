@@ -18,6 +18,13 @@ class PasswordController extends Controller
         $validated = $request->validateWithBag('updatePassword', [
             'current_password' => ['required', 'current_password'],
             'password' => ['required', Password::defaults(), 'confirmed'],
+            ], [
+            //mensagens de excessão para senha
+            'current_password.required' => 'Você precisa informar sua senha atual.',
+            'current_password.current_password' => 'A senha atual informada está incorreta.',
+            'password.required' => 'Você precisa informar uma nova senha.',
+            'password.min' => 'A nova senha deve ter no mínimo :min caracteres.',
+            'password.confirmed' => 'A confirmação da nova senha não confere.',
         ]);
 
         $request->user()->update([

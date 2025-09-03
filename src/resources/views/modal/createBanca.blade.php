@@ -10,8 +10,11 @@
                 </button>
             </div>
             <div class="modal-body">
-
-                <div class="form-group">
+                <div id="modal_banca_success" class="alert alert-success rounded-3" style="display:none;"></div>
+                <div id="modal_banca_errors" class="alert alert-danger rounded-3" style="display:none;"></div>
+                
+                <div id="form_create_banca_content">
+                    <div class="form-group">
                     <label for="data">Data da banca</label>
                     <input type="date" name="data" id="data" class="form-control">
                     <label for="local">Local</label>
@@ -34,8 +37,6 @@
                         </div>
                         @endforeach
                     </div>
-                    <a href="" id="cadastrarProfessorModalBanca" class="modal-trigger" data-bs-toggle="modal"
-                    data-bs-target="#createProfessorBanca" data-return-to-modal="#createBanca">Cadastrar professor interno</a>
                     <div class="form-group" id="professores_externos">
                         <label for="professores">Professores externos</label>
 
@@ -48,17 +49,19 @@
                     </div>
                     <a href="" id="cadastrarProfessorExternoModal" class=" modal-trigger" data-bs-toggle="modal" data-bs-target="#createProfessorExterno" data-return-to-modal="#createBanca">Cadastrar professor externo</a>
                 </div>
+                </div>
 
             </div>
-            <div class="modal-footer">
+            <div class="modal-footer" id="buttons">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="buttonCancelBanca">Cancelar</button>
-                <button type="button" class="btn custom-button" data-dismiss="modal" id="cadastrarBancaButton">
+                <button type="button" class="btn custom-button" id="cadastrarBancaButton">
                     Cadastrar
                 </button>
-                <button type="button" class="btn custom-button" data-dismiss="modal" id="cadastrandoBancaButton" hidden disabled>
-                    <span id="iconLoadingBanca" class="spinner-border spinner-border-sm" data-bs-dismiss="modal" aria-hidden="true"></span>
+                <button type="button" class="btn custom-button" id="cadastrandoBancaButton" hidden disabled>
+                    <span id="iconLoadingBanca" class="spinner-border spinner-border-sm" aria-hidden="true"></span>
                     Cadastrando
                 </button>
+            </div>
             </div>
         </div>
     </div>
@@ -130,6 +133,25 @@
             success: function(response) {
                 loading();
                 console.log(response);
+                
+                if (response.error) {
+                    loaded();
+                    showErrorMessage(response.error);
+                    return;
+                }
+                
+                // Close the modal
+                $('#createBanca').modal('hide');
+                
+                // Clear form fields
+                $('#data').val('');
+                $('#local').val('');
+                $('input[name="professores_internos[]"]').prop('checked', false);
+                $('input[name="professores_externos[]"]').prop('checked', false);
+                $('#textPresidente').val('');
+                
+                // Show success message using global notification system
+                showSuccessMessage('Banca cadastrada com sucesso!');
 
                 //Atualizar select de bancas
                 $selectBanca = $('#banca_id');
@@ -168,13 +190,25 @@
                         text: texto
                     }));
                 });
+                
                 loaded();
-                alert('Banca cadastrada com sucesso!');
-                $('#createBanca').modal('hide');
             },
-            error: function(error) {
-                alert('Ocorreu um erro ao cadastrar a banca.');
-                $('#createBanca').modal('hide');
+            error: function(jqXHR) {
+                var errorMessage = '';
+                if (jqXHR.status === 422) {
+                    var errors = jqXHR.responseJSON.errors;
+                    $.each(errors, function(key, value) {
+                        errorMessage += value + '<br>';
+                    });
+                } else {
+                    var serverMessage = 'Por favor, tente novamente.';
+                    if (jqXHR.responseJSON && jqXHR.responseJSON.message) {
+                        serverMessage = jqXHR.responseJSON.message;
+                    }
+                    errorMessage = 'Ocorreu um erro inesperado. Detalhe: ' + serverMessage;
+                }
+                
+                showErrorMessage(errorMessage, 'Erro de Validação');
                 loaded();
             }
         });
@@ -190,6 +224,17 @@
             buttonCancelar.prop('disabled', false);
             buttonCadastrando.prop('hidden', true);
         }
+    });
+    
+    // Reseta o modal para o estado inicial se ele for fechado manualmente
+    $('#createBanca').on('hidden.bs.modal', function () {
+        $('#data').val('');
+        $('#local').val('');
+        $('input[name="professores_internos[]"]').prop('checked', false);
+        $('input[name="professores_externos[]"]').prop('checked', false);
+        $('#textPresidente').val('');
+        $('#form_create_banca_content').show();
+        $('#buttons').show();
     });
 });
 </script>

@@ -16,7 +16,7 @@ return new class extends Migration
             $table->dropColumn('usuario_id');
             $table->foreignId('user_id')->constrained(
                 table: 'users'
-            );
+            )->onDelete('cascade');
         });
     }
 

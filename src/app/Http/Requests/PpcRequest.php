@@ -22,8 +22,8 @@ class PpcRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'ppc' => ['nullable', 'file', 'mimes:pdf', 'max:10240'],
-            'matriz_curricular' => ['nullable', 'file', 'mimes:pdf', 'max:10240'],
+            'ppc' => ['nullable', 'file', 'mimes:pdf', 'max:61440'],
+            'matriz_curricular' => ['nullable', 'file', 'mimes:pdf', 'max:61440'],
         ];
     }
 
@@ -33,12 +33,12 @@ class PpcRequest extends FormRequest
             'ppc' => [
                 'file' => 'O ppc deve ser um arquivo', 
                 'mimes' => 'O ppc deve ser um PDF', 
-                'max'  => 'O ppc deve ter no máximo 10 Mb',
+                'max'  => 'O ppc deve ter no máximo 60 Mb',
             ],
             'matriz_curricular' => [
                 'file' => 'A matriz curricular deve ser um arquivo', 
                 'mimes' => 'A matriz curricular deve ser um PDF', 
-                'max'  => 'A matriz curricular deve ter no máximo 10 Mb',
+                'max'  => 'A matriz curricular deve ter no máximo 60 Mb',
             ],
         ];
     }

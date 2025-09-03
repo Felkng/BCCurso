@@ -1,50 +1,74 @@
- @extends('layouts.main')
+@extends('layouts.main')
 
- @section('title', 'Criar Banca')
+@section('title', 'Criar Banca')
 
- @section('content')
- <div class="custom-container">
-     <div>
-         <div>
-             <i class="fas fa-chalkboard fa-2x"></i>
-             <h3 class="smaller-font">Criar Banca</h3>
-         </div>
-     </div>
- </div>
- <div class="container mt-4">
-     <form method="post" action="{{ route('banca.store') }}">
-         @csrf
-         <div class="form-group">
-             <label for="data" class="form-label">Data da banca*:</label>
-             <input type="date" name="data" id="data" class="form-control" required>
-             <br>
-             <label for="local" class="form-label">Local*:</label>
-             <input type="text" name="local" id="local" class="form-control" placeholder="Local da banca" required>
+@section('content')
+<div class="custom-container">
+    <div>
+        <div>
+            <i class="fas fa-chalkboard fa-2x"></i>
+            <h3 class="smaller-font">Criar Nova Banca</h3>
+        </div>
+    </div>
+</div>
 
-             <div class="form-group">
-                 <label for="" class="form-label"> <br>Presidente*:</label>
-                 <select name="presidente" id="presidente" class="form-select" required>
-                     <option value="" disabled selected>Selecione um orientador</option>
-                     @foreach ($professores_internos as $professor)
-                     <option value="{{ $professor->id }}" data-professor-id="{{ $professor->id }}"> {{$professor->nome}} </option>
-                     @endforeach
-                 </select>
-             </div>
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-body">
+            <form method="post" action="{{ route('banca.store') }}">
+                @csrf
 
-             <div class="form-group" id="professores">
-                 <label for="professores" class="form-label">Professores internos:</label>
+                <div class="row mb-4">
+                    <div class="col-md-4">
+                        <label for="data" class="form-label fw-bold">Data da banca*:</label>
+                        <input type="date" name="data" id="data" class="form-control" required>
+                    </div>
+                    <div class="col-md-8">
+                        <label for="local" class="form-label fw-bold">Local*:</label>
+                        <input type="text" name="local" id="local" class="form-control" placeholder="Ex: Sala 201 ou link da chamada" required>
+                    </div>
+                </div>
 
-                 @foreach ($professores_internos as $professor_interno)
-                 <div class="form-check">
-                     <input type="checkbox" class="form-check-input" name="professores_internos[]" id="professor_{{$professor_interno->id}}" value="{{$professor_interno->id}}">
-                     <label for="professor_{{$professor_interno->id}}" class="form-check-label text-wrap">{{$professor_interno->nome}} </label>
-                 </div>
-                 @endforeach
-             </div>
-             <a href="" class="btn btn-info  modal-trigger" data-bs-toggle="modal" data-bs-target="#createProfessor">Cadastrar professor interno</a>
-             <div class="form-group" id="professores_externos">
+                <hr>
+
+                <div class="row mt-4">
+                    <div class="col-12">
+                        <h5 class="mb-3">Membros Internos</h5>
+                        
+                        <div class="form-group" id="professores">
+                            <label for="presidente" class="form-label fw-bold">Presidente*:</label>
+                            <select name="presidente" id="presidente" class="form-select" required>
+                                <option value="" disabled selected>Selecione um presidente para a banca</option>
+                                @foreach ($professores_internos as $professor)
+                                <option value="{{ $professor->id }}" data-professor-id="{{ $professor->id }}"> {{ $professor->nome }} </option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        <div class="form-group" id="professores">
+                            <label for="professores" class="form-label">Professores internos:</label>
+                        <a href="#" class="btn btn-outline-primary btn-sm py-0" data-bs-toggle="modal" data-bs-target="#createProfessor">
+                                    <i class="fas fa-plus fa-xs"></i> Novo
+                                </a>
+                            @foreach ($professores_internos as $professor_interno)
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input" name="professores_internos[]" id="professor_{{$professor_interno->id}}" value="{{$professor_interno->id}}">
+                                <label for="professor_{{$professor_interno->id}}" class="form-check-label text-wrap">{{$professor_interno->nome}} </label>
+                            </div>
+                            @endforeach
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row mt-3">
+                    <div class="col-12">
+                        <h5 class="mb-3">Membros Externos</h5>
+                        <div class="form-group" id="professores_externos">
                  <br>
                  <label for="professores" class="form-label">Professores externos:</label>
+                 <a href="#" class="btn btn-outline-primary btn-sm py-0" data-bs-toggle="modal" data-bs-target="#createProfessorExterno">
+                                    <i class="fas fa-plus fa-xs"></i> Novo
+                                </a>
                  @foreach ($professores_externos as $professor_externo)
                  <div class="form-check">
                      <input type="checkbox" class="form-check-input" name="professores_externos[]" id="professor_externo_{{$professor_externo->id}}" value="{{$professor_externo->id}}">
@@ -52,15 +76,22 @@
                  </div>
                  @endforeach
              </div>
-             <a href="" class="btn btn-info modal-trigger" data-bs-toggle="modal" data-bs-target="#createProfessorExterno">Cadastrar professor externo</a>
-         </div>
-         <button type="submit" class="btn custom-button custom-button-castastrar-tcc btn-default">Cadastrar</button>
-         <a href="{{ route('banca.index') }}" class="btn custom-button custom-button-castastrar-tcc btn-default">Cancelar</a>
-     </form>
- </div>
- @include('modal.createProfessor')
- @include('modal.createProfessorExterno')
- @stop
+                    </div>
+                </div>
+                
+                <div class="mt-4 d-flex justify-content-end">
+                    <a href="{{ route('banca.index') }}" class="btn btn-secondary me-2">Cancelar</a>
+                    <button type="submit" class="btn btn-success">Cadastrar Banca</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@include('modal.createProfessor')
+@include('modal.createProfessorExterno')
+
+@stop
 
  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
  <script>

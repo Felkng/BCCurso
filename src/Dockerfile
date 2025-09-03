@@ -44,14 +44,14 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 # Copy composer files first (for better caching)
 COPY composer.json composer.lock ./
 
+# Copy the rest of the application
+COPY . .
+
 # Install PHP dependencies
-RUN composer install --no-dev --optimize-autoloader --no-scripts --prefer-dist
+RUN composer install --optimize-autoloader --no-scripts --prefer-dist
 
 # Copy built assets from the building stage
 COPY --from=builder /app/public/build public/build
-
-# Copy the rest of the application
-COPY . .
 
 # Set proper permissions
 RUN chown -R www-data:www-data /var/www \
@@ -62,4 +62,4 @@ RUN chown -R www-data:www-data /var/www \
 EXPOSE 8000
 
 # Start the application
-CMD php artisan serve --host=0.0.0.0 --port=8000
+CMD sleep 10; php artisan migrate; php artisan serve --host=0.0.0.0 --port=8000;

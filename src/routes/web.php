@@ -15,8 +15,12 @@ use App\Http\Controllers\TccController;
 use App\Http\Controllers\CursoController;
 use App\Http\Controllers\PpcController;
 use App\Http\Controllers\CoordenadorController;
+use App\Http\Controllers\DisciplinaController;
+use App\Http\Controllers\IntencaoMatriculaController;
 use Illuminate\Support\Facades\Route;
-
+use App\Http\Controllers\LinkController;
+use App\Http\Controllers\ComentarioController;
+use App\Http\Controllers\FavoritoController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -76,7 +80,8 @@ Route::get('/projeto/show/{id}', [ProjetoController::class, 'show'])->name('proj
 //Servidor
 Route::resource('servidor', ServidorController::class)->parameter('servidor', 'id')->except(['show', 'edit', 'update', 'destroy']);
 
-
+//links
+Route::delete('/links/{link}', [LinkController::class, 'destroy'])->name('links.destroy')->middleware('auth');
 
 
 //Informações dos Professores (Não Editável)
@@ -89,14 +94,18 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-//CRUDs
-Route::middleware('auth', 'role:professor')->group(function () {
-
-    //Usuário
+// Rotas de perfil - acessíveis para professor e aluno
+Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     Route::delete('/profile/delete_foto/{id}', [ProfileController::class, 'deleteFoto'])->name('profile.delete_foto');
+});
+
+//CRUDs
+Route::middleware('auth', 'role:professor')->group(function () {
+
+
 });
 
 Route::middleware('auth', 'role:coordenador')->group(function () {
@@ -109,7 +118,7 @@ Route::middleware('auth', 'role:coordenador')->group(function () {
 
     Route::delete('/postagem/delete_imagem/{id}', [PostagemController::class, 'deleteImagem'])->name('postagem.delete_imagem');
     Route::delete('/postagem/delete_arquivo/{id}', [PostagemController::class, 'deleteArquivo'])->name('postagem.delete_arquivo');
-
+    Route::post('/postagens/{postagem}/toggle-pin', [PostagemController::class, 'togglePin'])->name('postagem.toggle-pin');
     //Banca
     Route::resource('banca', BancaController::class)->parameter('banca', 'id')->except(['show']);
 
@@ -134,11 +143,11 @@ Route::middleware('auth', 'role:coordenador')->group(function () {
     Route::resource('ata', AtaController::class)->parameter('ata', 'id')->except(['index']);
 
     //Aluno
-    Route::resource('aluno', AlunoController::class)->parameter('aluno', 'id')->only(['store']);
+    Route::resource('aluno', AlunoController::class);
 
     //Professor Externo
     Route::resource('professor-externo', ProfessorExternoController::class)->parameter('professor-externo', 'id')
-        ->only(['index', 'store', 'create']);
+        ->only(['index', 'store', 'create', 'destroy']);
 
     // Curso
     Route::resource('curso', CursoController::class)->parameter('curso', 'id')->except(['show']);
@@ -163,4 +172,40 @@ Route::middleware('auth', 'role:coordenador')->group(function () {
         Route::resource('/ppc', PpcController::class)->except(['show']);
     });
 
+    //Disciplina
+    Route::resource('disciplina', DisciplinaController::class);
+
+    // Intencao Matricula
+    Route::resource('intencao_matricula', IntencaoMatriculaController::class);
+    Route::get('intencao_matricula/{intencao_matricula}/relatorio', [IntencaoMatriculaController::class, 'relatorio'])->name('intencao_matricula.relatorio');
+});
+
+// Rota para alunos declararem intenção de matrícula
+Route::get('/declarar-intencao-matricula', [App\Http\Controllers\DeclaracaoIntencaoMatriculaController::class, 'create'])
+    ->name('declaracao_intencao_matricula.create');
+Route::post('/declarar-intencao-matricula', [App\Http\Controllers\DeclaracaoIntencaoMatriculaController::class, 'store'])
+    ->name('declaracao_intencao_matricula.store');
+Route::get('/minhas-intencoes-matricula', [App\Http\Controllers\DeclaracaoIntencaoMatriculaController::class, 'index'])
+    ->name('declaracao_intencao_matricula.index');
+Route::get('/minhas-intencoes-matricula/{id}', [App\Http\Controllers\DeclaracaoIntencaoMatriculaController::class, 'show'])
+    ->name('declaracao_intencao_matricula.show');
+
+// Novas rotas para o fluxo de seleção de disciplinas
+Route::get('/selecionar-disciplinas', [App\Http\Controllers\DeclaracaoIntencaoMatriculaController::class, 'selecionarDisciplinas'])
+    ->name('declaracao_intencao_matricula.selecionar_disciplinas');
+Route::post('/buscar-disciplinas', [App\Http\Controllers\DeclaracaoIntencaoMatriculaController::class, 'buscarDisciplinas'])
+    ->name('declaracao_intencao_matricula.buscar_disciplinas');
+Route::post('/salvar-disciplinas', [App\Http\Controllers\DeclaracaoIntencaoMatriculaController::class, 'salvarDisciplinas'])
+    ->name('declaracao_intencao_matricula.salvar_disciplinas');
+
+// Rotas para comentários e favoritos (disponíveis para todos os usuários autenticados)
+Route::middleware('auth')->group(function () {
+    // Rotas para comentários
+    Route::post('/comentarios', [ComentarioController::class, 'store'])->name('comentarios.store');
+    Route::put('/comentarios/{id}', [ComentarioController::class, 'update'])->name('comentarios.update');
+    Route::delete('/comentarios/{id}', [ComentarioController::class, 'destroy'])->name('comentarios.destroy');
+
+    // Rotas para favoritos
+    Route::post('/favoritos/toggle', [FavoritoController::class, 'toggle'])->name('favoritos.toggle');
+    Route::get('/meus-favoritos', [FavoritoController::class, 'meusFavoritos'])->name('favoritos.meus');
 });

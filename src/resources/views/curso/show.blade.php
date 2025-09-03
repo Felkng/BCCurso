@@ -1,508 +1,568 @@
 @extends('layouts.main')
-@section('title', 'Sobre')
+@section('title', 'Sobre o Curso')
 @section('content')
 
-  <style>
+<style>
+.curso-page-content {
+    --primary-blue: #0f2257;
+    --secondary-blue: #2563eb;
+    --light-blue: #dbeafe;
+    --accent-blue: #1d4ed8;
+    --navy-blue: #0f2b76;
+    --text-dark: #1f2937;
+    --text-light: #6b7280;
+    --border-color: #e5e7eb;
+    --background-light: #f8fafc;
+}
 
+.curso-page-content .institutional-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
 
-    .bloco1{
-      text-align:left;
-      margin:40px;
-      padding-bottom:20px;
+.curso-page-content .page-header {
+    background: var(--primary-blue);
+    color: white;
+    padding: 60px 0;
+    margin-bottom: 0;
+}
+
+.curso-page-content .page-header h1 {
+    font-size: 2.5rem;
+    font-weight: 300;
+    text-align: center;
+    margin-bottom: 10px;
+    letter-spacing: 1px;
+}
+
+.curso-page-content .page-header .subtitle {
+    text-align: center;
+    font-size: 1.1rem;
+    opacity: 0.9;
+    font-weight: 300;
+}
+
+.curso-page-content .section-navigation {
+    background: white;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    border-bottom: 3px solid var(--secondary-blue);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.curso-page-content .nav-tabs {
+    display: flex;
+    justify-content: center;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.curso-page-content .nav-tab {
+    flex: 1;
+    text-align: center;
+    padding: 20px;
+    color: var(--text-dark);
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 1rem;
+    border-bottom: 3px solid transparent;
+    transition: all 0.3s ease;
+}
+
+.curso-page-content .nav-tab:hover {
+    background-color: var(--light-blue);
+    color: var(--primary-blue);
+    text-decoration: none;
+}
+
+.curso-page-content .nav-tab.active {
+    color: var(--primary-blue);
+    border-bottom-color: var(--primary-blue);
+    background-color: var(--light-blue);
+}
+
+.curso-page-content .content-section {
+    padding: 60px 0;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.curso-page-content .content-section:last-child {
+    border-bottom: none;
+}
+
+.curso-page-content .section-title {
+    font-size: 2rem;
+    color: var(--primary-blue);
+    font-weight: 600;
+    margin-bottom: 40px;
+    text-align: center;
+    position: relative;
+}
+
+.curso-page-content .section-title::after {
+    content: '';
+    display: block;
+    width: 60px;
+    height: 3px;
+    background-color: var(--secondary-blue);
+    margin: 20px auto;
+}
+
+.curso-page-content .info-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+    margin-top: 40px;
+}
+
+.curso-page-content .info-card {
+    background: white;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 30px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.curso-page-content .info-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(30, 58, 138, 0.15);
+}
+
+.curso-page-content .info-card h3 {
+    color: var(--primary-blue);
+    font-size: 1.3rem;
+    font-weight: 600;
+    margin-bottom: 15px;
+    border-bottom: 2px solid var(--light-blue);
+    padding-bottom: 10px;
+}
+
+.curso-page-content .info-card p, .curso-page-content .info-card ul {
+    color: var(--text-dark);
+    line-height: 1.6;
+    margin-bottom: 15px;
+}
+
+.curso-page-content .info-card ul {
+    padding-left: 20px;
+}
+
+.curso-page-content .info-card li {
+    margin-bottom: 8px;
+}
+
+.curso-page-content .course-description {
+    background: var(--background-light);
+    padding: 50px;
+    border-left: 5px solid var(--secondary-blue);
+    margin: 40px 0;
+    border-radius: 0 8px 8px 0;
+}
+
+.curso-page-content .course-description p {
+    font-size: 1.1rem;
+    line-height: 1.8;
+    color: var(--text-dark);
+    text-align: justify;
+}
+
+.curso-page-content .quality-badges {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    margin: 40px 0;
+    flex-wrap: wrap;
+}
+
+.curso-page-content .quality-badge {
+    background: linear-gradient(135deg, #0f2257, #0f2b76);
+    color: white;
+    padding: 20px 30px;
+    border-radius: 50px;
+    font-weight: 600;
+    text-align: center;
+    box-shadow: 0 4px 15px rgba(15, 34, 87, 0.25);
+}
+
+.curso-page-content .quality-badge .badge-title {
+    font-size: 1.1rem;
+    margin-bottom: 5px;
+}
+
+.curso-page-content .quality-badge .badge-value {
+    font-size: 2rem;
+    font-weight: 700;
+}
+
+.curso-page-content .document-links {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    margin: 40px 0;
+}
+
+.curso-page-content .document-link {
+    display: block;
+    background: white;
+    border: 2px solid var(--border-color);
+    border-radius: 8px;
+    padding: 25px;
+    text-decoration: none;
+    color: var(--text-dark);
+    transition: all 0.3s ease;
+    text-align: center;
+}
+
+.curso-page-content .document-link:hover {
+    border-color: var(--secondary-blue);
+    background: var(--light-blue);
+    text-decoration: none;
+    color: var(--primary-blue);
+}
+
+.curso-page-content .document-link i {
+    font-size: 2.5rem;
+    color: var(--secondary-blue);
+    margin-bottom: 15px;
+    display: block;
+}
+
+.curso-page-content .document-link .doc-title {
+    font-weight: 600;
+    font-size: 1.1rem;
+    margin-bottom: 8px;
+}
+
+.curso-page-content .document-link .doc-description {
+    font-size: 0.9rem;
+    color: var(--text-light);
+}
+
+.curso-page-content .primary-action {
+    text-align: center;
+    margin: 50px 0;
+}
+
+.curso-page-content .btn-institutional {
+    background: linear-gradient(135deg, var(--primary-blue), var(--navy-blue));
+    color: white;
+    padding: 18px 40px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    text-decoration: none;
+    border-radius: 50px;
+    display: inline-block;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(15, 34, 87, 0.3);
+    border: none;
+}
+
+.curso-page-content .btn-institutional:hover {
+    background: linear-gradient(135deg, var(--navy-blue), var(--primary-blue));
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(15, 34, 87, 0.4);
+    color: white;
+    text-decoration: none;
+}
+
+.curso-page-content .back-section {
+    text-align: center;
+    margin: 40px 0;
+    padding: 40px 0;
+    border-top: 1px solid var(--border-color);
+}
+
+.curso-page-content .btn-back {
+    background: white;
+    color: var(--text-dark);
+    border: 2px solid var(--border-color);
+    padding: 12px 30px;
+    border-radius: 25px;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.curso-page-content .btn-back:hover {
+    border-color: var(--secondary-blue);
+    background: var(--light-blue);
+    color: var(--primary-blue);
+    text-decoration: none;
+}
+
+@media (max-width: 768px) {
+    .curso-page-content .page-header h1 {
+        font-size: 2rem;
     }
-    /*bloco principal*/
-    .bloco2{
-        padding:0px 10% 0px 10%;
+    
+    .curso-page-content .nav-tabs {
+        flex-direction: column;
     }
-/*
-    .bloco3{
-      text-align:center;
-      border-bottom:1px solid #d3d3d3;
-      padding-top:17px;
-      padding-bottom:17px;
-      margin-bottom:17px;
+    
+    .curso-page-content .nav-tab {
+        border-bottom: 1px solid var(--border-color);
+        border-right: none;
     }
-
-    .bloco4{
-      display:flex;
-      flex-direction:column;
-      justify-content:center;
-      align-items:left;
-      margin:0px 40px;
-
-      color:white;
-      font-size:120%;
-      text-shadow:0.3px 0.3px;
+    
+    .curso-page-content .quality-badges {
+        flex-direction: column;
+        align-items: center;
     }
-    .bloco41{
-      flex:1 1 0;
-      border-radius:3px;
-      border:1px solid gray;
+    
+    .curso-page-content .course-description {
+        padding: 30px 20px;
     }
-*/
-    .title{
-      font-weight:bold;
-      font-size:20px;
+    
+    .curso-page-content .content-section {
+        padding: 40px 0;
     }
-    .title2{
-      font-size:24px;
+    
+    .curso-page-content .info-cards {
+        grid-template-columns: 1fr;
     }
-    .title3{
-      font-size:22px;
-      font-weight:bold;
+}
+
+@media (max-width: 480px) {
+    .curso-page-content .document-links {
+        grid-template-columns: 1fr;
     }
+}
 
+.curso-page-content .data-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 30px 0;
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
 
-    .bloco_principal{
-      display:flex;
-      flex-direction:column;
+.curso-page-content .data-table th {
+    background: var(--primary-blue);
+    color: white;
+    padding: 15px;
+    text-align: left;
+    font-weight: 600;
+}
 
-      border-left: 4px solid #d3d3d3;
-      border-right:4px solid #d3d3d3;
+.curso-page-content .data-table td {
+    padding: 15px;
+    border-bottom: 1px solid var(--border-color);
+}
 
-
-      border-radius:5px;
-      margin:0px;
-
-    }
-
-    .button{
-        display:block;
-        text-align:center;
-        color:white;
-        font-weight:bold;
-        text-decoration:none;
-        border-radius:30px;
-        margin:0px 40px 0px 0px;
-        width:30%;
-        min-width:200px;
-        height:100%;
-        padding:16px;
-        background-color:green;
-        font-size:110%;
-    }
-
-    .button:hover{
-        background-color:#198754;
-    }
-
-    .borda{
-      padding-left:8px;
-      padding-right:8px;
-      margin-bottom:2px;
-      border:1px solid gray;
-      border-radius:6px;
-    }
-    .borda2{
-      display:block;
-      border-bottom:0.5px solid #d3d3d3;
-    }
-
-
-    .bloco10{
-      margin:0px 40px 0px 40px;
-      position:relative;
-      display:flex;
-      flex-direction:row;
-      align-content:stretch;
-      min-height:80px;
-      justify-content:space-evenly;
-    }
-        .blocos_pra_linha{
-          display:flex;
-          flex-direction:column;
-          flex-wrap:wrap;
-          flex:1;
-        }
-            .blocos_pra_linha1{
-              border-bottom:1px solid gray;
-              background-color:white;
-              height:50%;
-              flex:1;
-            }
-            .blocos_pra_linha2{
-              background-color:white;
-              height:50%;
-              flex:1;
-            }
-        .bloco101{
-          position:absolute;
-          top:20px;
-          display:inline-block;
-          padding:0px 5px 0px 5px;
-          background-color:white;
-          overflow:hidden;
-        }
-
-    .nav{
-      position:absolute;
-      padding-bottom:80px;
-      left:0;
-      right:0;
-      top:0;
-      display:flex;
-      height:auto;
-      align-items:stretch;
-    }
-    .bloco_menu{
-      flex:1;
-      font-size:110%;
-      text-align:center;
-      font-weight:bold;
-      min-height:100%;
-      border:2px solid #d3d3d3;
-      /*color:#325290;*/
-      color:#1c2c4c;
-      text-decoration:none;
-    }
-    .bloco_menu:hover{
-      color: #324c81;
-    }
-
-    .space{
-      margin-bottom:40px;
-    }
-
-
-
-
-
+.curso-page-content .data-table tr:hover {
+    background: var(--background-light);
+}
 </style>
 
-    <div class="custom-container">
-        <div>
-            <div>
-                <h3 class="title2">Sobre o curso </h3>
-            </div>
-        </div>
+<div class="curso-page-content">
+<!-- Header da página -->
+<div class="page-header">
+    <div class="institutional-container">
+        <h1>Curso de {{$curso->nome}}</h1>
+        <p class="subtitle">Instituto Federal do Norte de Minas Gerais - Campus Montes Claros</p>
     </div>
-
-    <div class = "bloco2">
-
-        <div class = "bloco_principal" style = "position:relative;">
-
-          <nav class = "nav">
-            <a href = "#o_que_e_o_curso" class = "bloco_menu">Conheça o curso</a>
-            <a href = "#dados" class = "bloco_menu">Dados gerais</a>
-            <a href = "#inscrever" class = "bloco_menu">Estude no IF</a>
-          </nav>
-
-          <div class = "space"></div>
-
-          <div class = "bloco10">
-              <div class = "bloco101">
-                  <div style = "text-align:center; width:100%; margin-top:50px;">
-                        <span class = "title3">Conheça o curso de {{$curso->nome}}, do Instituto Federal do Norte de Minas</span>
-                  </div>
-              </div>
-          </div>
-
-
-
-            <div id="o_que_e_o_curso" class = "bloco1" style= "margin-top:150px;">
-
-                <div style = "text-align:center;">
-                    <span class = "title">O que é o curso de {{$curso->nome}} ( {{$curso->sigla}} )</span>
-                </div>
-
-                <br>
-
-                <p>{{$curso->descricao}}</p>
-                <br>
-                <span> Nas últimas avaliações realizadas pelo MEC os resultados obtidos foram: </span>
-
-                <ul>
-                    <li> {{$curso->nota_in_loco_SINAES}} na avaliação in loco –SINAES </li>
-                    <li> {{$curso->nota_enade}} no ENADE </li>
-                </ul>
-
-            </div>
-
-
-
-            <div id = "dados" class = "bloco10">
-
-                <div class = "blocos_pra_linha">
-                    <div class = "blocos_pra_linha1"></div>
-                    <div class = "blocos_pra_linha2"></div>
-                </div>
-
-                <div class = "bloco101">
-                        <span class = "title3">Dados gerais do curso</span>
-                </div>
-
-                <div class = "blocos_pra_linha">
-                    <div class = "blocos_pra_linha1"></div>
-                    <div class = "blocos_pra_linha2"></div>
-                </div>
-
-            </div>
-
-
-
-
-            <div class = "bloco1">
-
-                <div class="borda">
-                  <span class = "title borda2">Tempo para integração do curso</span>
-                  <p>O tempo mínimo necessário para concluir o curso é de {{$curso->tempo_min_conclusao}} anos e o tempo máximo é de {{$curso->tempo_max_conclusao}} anos. </p>
-                </div>
-
-                <div class = "borda">
-                  <span class = "title borda2">Ano de implementação do curso</span>
-                  <p>{{$curso->ano_implementacao}}.</p>
-                </div>
-
-                <div class = "borda">
-                  <span class = "title borda2">Modalidade</span>
-                  <p>{{$curso->modalidade}}.</p>
-                </div>
-
-                <div class = "borda">
-                  <span class = "title borda2">Turno</span>
-                  <p>{{$curso->turno}}.</p>
-                </div>
-
-                <div class = "borda">
-                  <span class = "title borda2">Tipo</span>
-                  <p>{{$curso->tipo}}.</p>
-                </div>
-
-                <div class = "borda">
-                  <span class = "title borda2">Habilitação</span>
-                  <p>{{$curso->habilitacao}}.</p>
-                </div>
-
-                <div class = "borda">
-                  <span class = "title borda2">Carga horária do curso</span>
-                  <p>{{$curso->carga_horaria}} horas .</p>
-                </div>
-
-                <div class = "borda">
-                  <span class = "title borda2">Matriz curricular</span>
-                    <p>
-                      <a href = "#">link para o documento sobre a matriz curricular</a>
-                    </p>
-                </div>
-
-                <div class = "borda">
-                  <span class = "title borda2">Calendário acadêmico</span>
-                    <p>
-                        <a href = "{{$curso->calendario}}"> link para o calendário acadêmico</a>
-                    </p>
-                </div>
-
-                <br>
-                <br>
-
-                <span class = "title">Mais informações</span>
-                <br>
-                <a href = "{{$curso->analytics}}">analytics</a>
-            </div>
-
-
-
-            <!--
-            <div class = "bloco1">
-              <span class = "title">Matriz curricular</span>
-                <p>O curso de Ciências da Computação do IFNMG contém em sua grade matérias voltadas para o desenvolvimento profissionalizante...</p>
-                <a href = "#">link para o documento sobre a matriz curricular</a>
-                <br>
-                <br>
-                <br>
-                <span class = "title">Calendário acadêmico</span>
-                <p>Veja o calendário acadêmico no link</p>
-                <a href = "#">calendário acadêmico</a>
-            </div>
-            -->
-
-
-
-
-
-            <div id = "inscrever" class = "bloco10">
-
-                <div class = "blocos_pra_linha">
-                    <div class = "blocos_pra_linha1"></div>
-                    <div class = "blocos_pra_linha2"></div>
-                </div>
-
-
-                <div class = "bloco101">
-                        <div style = "text-align:center; width:100%; ">
-                            <span class = "title3">Deseja se matricular no curso?</span>
-                        </div>
-                </div>
-
-
-                <div class = "blocos_pra_linha">
-                    <div class = "blocos_pra_linha1"></div>
-                    <div class = "blocos_pra_linha2"></div>
-                </div>
-
-            </div>
-
-
-
-
-
-
-
-            <div class = "bloco1" style="flex:1;">
-
-                <span class = "title">Total de vagas ofertadas anualmente</span>
-                <p>São ofertadas {{$curso->vagas_ofertadas_anualmente}} vagas anualmente.</p>
-
-
-                <span class = "title">Total de vagas ofertadas por turma</span>
-                <p>São ofertadas {{$curso->vagas_ofertadas_turma}}  vagas por turma.</p>
-
-
-                <span class = "title">Periodicidade de ingresso</span>
-                <p>O ingresso no curso ocorre de forma {{$curso->periodicidade_ingresso}}</p>
-
-                <span class = "title">Formas de acesso</span>
-                <ul>
-                  @foreach($curso->formasAcesso as $formaAcesso)
-
-                    <li>{{$formaAcesso->forma_acesso}}, {{$formaAcesso->porcentagem_vagas}}% das vagas.</li>
-
-                  @endforeach
-
-                </ul>
-
-                <span><a href = "{{$curso->horario}}"> Veja os horários das disciplinas</a></span>
-
-                <br>
-                <br>
-
-
-                <a href = "https://www.ifnmg.edu.br/estude-no-ifnmg" class = "button">Estude no IFNMG</a>
-
-            </div>
-
+</div>
+
+<!-- Navegação por seções -->
+<nav class="section-navigation">
+    <div class="nav-tabs">
+        <a href="#sobre" class="nav-tab">Sobre o Curso</a>
+        <a href="#dados" class="nav-tab">Dados Gerais</a>
+        <a href="#documentos" class="nav-tab">Documentos</a>
+        <a href="#admissao" class="nav-tab">Admissão</a>
+    </div>
+</nav>
+
+<div class="institutional-container">
+    
+    <!-- Seção: Sobre o Curso -->
+    <section id="sobre" class="content-section">
+        <h2 class="section-title">Sobre o Curso de {{$curso->nome}} ({{$curso->sigla}})</h2>
+        
+        <div class="course-description">
+            <p>{{$curso->descricao}}</p>
         </div>
 
-    </div>
+        <!-- Badges de qualidade -->
+        <div class="quality-badges">
+            <div class="quality-badge">
+                <div class="badge-title">Avaliação SINAES</div>
+                <div class="badge-value">{{$curso->nota_in_loco_SINAES}}</div>
+            </div>
+            <div class="quality-badge">
+                <div class="badge-title">Nota ENADE</div>
+                <div class="badge-value">{{$curso->nota_enade}}</div>
+            </div>
+        </div>
 
-    <div class="text-center mt-4">
-        <a href="{{ url()->previous() }}" class="btn custom-button custom-button-castastrar-tcc btn-default">Voltar</a>
+        <p style="text-align: center; color: var(--text-light); font-style: italic; margin-top: 20px;">
+            Resultados obtidos nas últimas avaliações realizadas pelo Ministério da Educação (MEC)
+        </p>
+    </section>
+
+    <!-- Seção: Dados Gerais -->
+    <section id="dados" class="content-section">
+        <h2 class="section-title">Dados Gerais do Curso</h2>
+        
+        <div class="info-cards">
+            <div class="info-card">
+                <h3>Informações Básicas</h3>
+                <p><strong>Modalidade:</strong> {{$curso->modalidade}}</p>
+                <p><strong>Tipo:</strong> {{$curso->tipo}}</p>
+                <p><strong>Turno:</strong> {{$curso->turno}}</p>
+                <p><strong>Habilitação:</strong> {{$curso->habilitacao}}</p>
+                <p><strong>Ano de Implementação:</strong> {{$curso->ano_implementacao}}</p>
+            </div>
+
+            <div class="info-card">
+                <h3>Duração e Carga Horária</h3>
+                <p><strong>Tempo Mínimo:</strong> {{$curso->tempo_min_conclusao}} anos</p>
+                <p><strong>Tempo Máximo:</strong> {{$curso->tempo_max_conclusao}} anos</p>
+                <p><strong>Carga Horária Total:</strong> {{$curso->carga_horaria}} horas</p>
+            </div>
+
+            <div class="info-card">
+                <h3>Vagas e Ingresso</h3>
+                <p><strong>Vagas Anuais:</strong> {{$curso->vagas_ofertadas_anualmente}} vagas</p>
+                <p><strong>Vagas por Turma:</strong> {{$curso->vagas_ofertadas_turma}} vagas</p>
+                <p><strong>Periodicidade:</strong> {{$curso->periodicidade_ingresso}}</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Seção: Documentos -->
+    <section id="documentos" class="content-section">
+        <h2 class="section-title">Documentos Institucionais</h2>
+        
+        <div class="document-links">
+            @if($curso->ppc && $curso->ppc->count() > 0)
+                <a href="{{ asset('storage/' . $curso->ppc[0]->path) }}" target="_blank" class="document-link">
+                    <i class="fas fa-file-pdf"></i>
+                    <div class="doc-title">Projeto Pedagógico do Curso</div>
+                    <div class="doc-description">Acesse o PPC completo</div>
+                </a>
+                
+                <a href="{{ asset('storage/' . $curso->ppc[0]->matriz->path) }}" target="_blank" class="document-link">
+                    <i class="fas fa-table"></i>
+                    <div class="doc-title">Matriz Curricular</div>
+                    <div class="doc-description">Estrutura curricular do curso</div>
+                </a>
+            @else
+                <div class="info-card">
+                    <h3>Documentos Indisponíveis</h3>
+                    <p>Os documentos do Projeto Pedagógico e Matriz Curricular não estão disponíveis no momento.</p>
+                </div>
+            @endif
+            
+            <a href="{{ asset('storage/' . $curso->calendario) }}" target="_blank" class="document-link">
+                <i class="fas fa-calendar-alt"></i>
+                <div class="doc-title">Calendário Acadêmico</div>
+                <div class="doc-description">Cronograma do ano letivo</div>
+            </a>
+            
+            <a href="{{ asset('storage/' . $curso->horario) }}" target="_blank" class="document-link">
+                <i class="fas fa-clock"></i>
+                <div class="doc-title">Horário das Disciplinas</div>
+                <div class="doc-description">Grade de horários atualizada</div>
+            </a>
+        </div>
+
+        @if($curso->analytics)
+        <div style="text-align: center; margin-top: 40px;">
+            <a href="{{$curso->analytics}}" target="_blank" class="btn-institutional">
+                <i class="fas fa-chart-bar" style="margin-right: 10px;"></i>
+                Estatísticas e Analytics
+            </a>
+        </div>
+        @endif
+    </section>
+
+    <!-- Seção: Admissão -->
+    <section id="admissao" class="content-section">
+        <h2 class="section-title">Processo de Admissão</h2>
+        
+        <div class="info-cards">
+            <div class="info-card">
+                <h3>Formas de Acesso</h3>
+                <ul>
+                    @foreach($curso->formasAcesso as $formaAcesso)
+                        <li><strong>{{$formaAcesso->forma_acesso}}</strong> - {{$formaAcesso->porcentagem_vagas}}% das vagas</li>
+                    @endforeach
+                </ul>
+            </div>
+            
+            <div class="info-card">
+                <h3>Informações de Vagas</h3>
+                <p><strong>Total de vagas anuais:</strong> {{$curso->vagas_ofertadas_anualmente}} vagas</p>
+                <p><strong>Vagas por turma:</strong> {{$curso->vagas_ofertadas_turma}} vagas</p>
+                <p><strong>Ingresso:</strong> {{$curso->periodicidade_ingresso}}</p>
+            </div>
+        </div>
+
+        <div class="primary-action">
+            <a href="https://www.ifnmg.edu.br/estude-no-ifnmg" target="_blank" class="btn-institutional">
+                <i class="fas fa-graduation-cap" style="margin-right: 10px;"></i>
+                Estude no IFNMG
+            </a>
+        </div>
+    </section>
+
+    <!-- Seção Voltar -->
+    <div class="back-section">
+        <a href="{{ url()->previous() }}" class="btn-back">
+            <i class="fas fa-arrow-left" style="margin-right: 8px;"></i>
+            Voltar
+        </a>
     </div>
-<!--
-    - Nome do curso: Ciência da Computação
-    - Modalidade: Presencial
-    - Tipo: Bacharelado
-    - Habilitação: Bacharel em Ciência da Computação
-    - Ano de implantação: 2013
-    - Ato de autorização: Portaria Nº 521-Reitor/2012
-    - Total de vagas ofertadas anualmente: 40
-    - Número de vagas ofertadas por turma: 40
-    - Formas de acesso: Vestibular/SISU
-    - Número de vagas disponibilizadas: 50%Vestibular e 50%SISU
-    - Periodicidade de ingresso: Anual
-    - Turno de funcionamento: Integral
-    - Tempo para integralização do curso: Mínimo de cinco anos (10 semestres) e máximo de sete anos e meio (15 semestres)
-    - Resultados obtidos nas últimas avaliações realizadas pelo MEC: ( Quatro (4) na avaliação in loco –SINAES; Nota quatro (4) no ENADE)
--->
+</div>
 
 <script>
-
-
-
-  //alterações feitas quando o tamanho da página muda, e quando a página carrega
-  function size_changed(){
-
-    let a;
-
-    a = window.innerWidth;
-
-    const elementos_bloco10 = document.getElementsByClassName("bloco10");
-
-    const elementos_bloco101 = document.getElementsByClassName("bloco101");
-
-    const elementos_title3 =  document.getElementsByClassName("title3");
-
-    const elementos_bloco2 = document.getElementsByClassName("bloco2");
-
-    const elementos_bloco1 = document.getElementsByClassName("bloco1");
-
-    const elementos_title = document.getElementsByClassName("title");
-
-    const button = document.querySelector(".button");
-
-    if(a < 600){
-
-
-
-
-        for (let i = 0; i < elementos_bloco10.length; i++) {
-          elementos_bloco10[i].style.height = (window.innerWidth*1.6 - 3000) +"px";
-        }
-
-        for (let i = 0; i < elementos_title3.length; i++) {
-          elementos_title3[i].style.fontSize = (window.innerWidth*0.032 + 5.5) +"px";
-        }
-
-        for (let i = 0; i < elementos_bloco2.length; i++) {
-          elementos_bloco2[i].style.padding = "0px 1% 0px 1%";
-        }
-
-        for (let i = 0; i < elementos_bloco1.length; i++) {
-          elementos_bloco1[i].style.margin = "40px 3% 40px 3%";
-        }
-
-        for (let i = 0; i < elementos_bloco10.length; i++) {
-          elementos_bloco10[i].style.margin = "0px 3% 0px 3%";
-        }
-
-        for (let i = 0; i < elementos_title.length; i++) {
-          elementos_title[i].style.fontSize = "16px";
-        }
-
-        let space = window.document.getElementsByClassName("space");
-        space[0].style.marginBottom = "80px";
-
-        for (let i = 0; i < elementos_bloco101.length; i++) {
-          elementos_bloco101[i].style.top = (elementos_bloco10[i].offsetHeight)/3 +"px";
-        }
-
-        button.style.fontSize = (window.innerWidth)/8 +50 + "%";
-
+// Navegação suave e highlight da seção ativa
+document.addEventListener('DOMContentLoaded', function() {
+    const navTabs = document.querySelectorAll('.nav-tab');
+    const sections = document.querySelectorAll('.content-section');
+    
+    // Função para atualizar tab ativo
+    function updateActiveTab() {
+        const scrollPos = window.scrollY + 100;
+        
+        sections.forEach((section, index) => {
+            const sectionTop = section.offsetTop;
+            const sectionBottom = sectionTop + section.offsetHeight;
+            
+            if (scrollPos >= sectionTop && scrollPos < sectionBottom) {
+                navTabs.forEach(tab => tab.classList.remove('active'));
+                navTabs[index].classList.add('active');
+            }
+        });
     }
-
-    else{
-
-      button.style.fontSize = (window.innerWidth)/15 +50 + "%";
-
-      for (let i = 0; i < elementos_bloco101.length; i++) {
-        elementos_bloco101[i].style.top = (elementos_bloco10[i].offsetHeight)/3.75 +"px";
-      }
-
-      for (let i = 0; i < elementos_bloco2.length; i++) {
-        elementos_bloco2[i].style.padding = "0px 10% 0px 10%";
-      }
-
-      for (let i = 0; i < elementos_bloco1.length; i++) {
-        elementos_bloco1[i].style.margin = "40px";
-      }
-
-      for (let i = 0; i < elementos_title.length; i++) {
-        elementos_title[i].style.fontSize = "20px";
-      }
-
-    }
-
-    window.document.getElementById("o_que_e_o_curso").style.marginTop = elementos_bloco10[0].offsetHeight + (20000/(window.innerWidth)) + "px";
-
-  }
-
-
-
-  window.onload = size_changed;
-  window.onresize = size_changed;
-
-
-
+    
+    // Event listener para scroll
+    window.addEventListener('scroll', updateActiveTab);
+    
+    // Event listener para cliques nos tabs
+    navTabs.forEach(tab => {
+        tab.addEventListener('click', function(e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            const offsetTop = target.offsetTop - 80; // Offset para navegação fixa
+            
+            window.scrollTo({
+                top: offsetTop,
+                behavior: 'smooth'
+            });
+        });
+    });
+    
+    // Definir tab ativo inicial
+    updateActiveTab();
+});
 </script>
+</div>
 
 @endsection

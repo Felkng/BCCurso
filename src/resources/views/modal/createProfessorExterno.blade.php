@@ -12,8 +12,8 @@
                 <div class="form-group">
                     <label for="nome">Nome</label>
                     <input type="text" name="nome-professor-externo" id="nome-professor-externo" class="form-control" placeholder="Nome do professor externo">
-                    <label for="filiacao">Filiação</label>
-                    <input type="text" name="filiacao" id="filiacao" class="form-control" placeholder="Nome da instituição de filiação">
+                    <label for="filiacao-professor-externo">Filiação</label>
+                    <input type="text" name="filiacao" id="filiacao-professor-externo" class="form-control" placeholder="Nome da instituição de filiação">
                 </div>
             </div>
             <div class="modal-footer">
@@ -26,14 +26,25 @@
 
 <script>
     $(document).ready(function() {
+        var isProcessing = false; 
+
         $('#cadastrarProfessoExternoButton').click(function() {
+            if (isProcessing) {
+                return;
+            }
+
             var nome = $('#nome-professor-externo').val();
-            var filiacao = $('#filiacao').val();
+            var filiacao = $('#filiacao-professor-externo').val();
 
             if (nome.trim() === '' || filiacao.trim() === '') {
                 alert('Por favor, preencha todos os campos.');
                 return;
             }
+
+            isProcessing = true;
+            var $button = $(this);
+            var originalText = $button.text();
+            $button.prop('disabled', true).text('Cadastrando...');
 
             var professoresSelecionadosAntes = [];
             $('input[name="professores_externos[]"]:checked').each(function() {
@@ -54,57 +65,79 @@
                 url: "{{ route('professor-externo.store') }}",
                 data: data,
                 success: function(response) {
-                    $('#createProfessorExterno').modal('hide');
-                    atualizarProfessoresExternos();
-
                     if (response.error) {
-                        alert(response.error);
+                        showErrorMessage(response.error);
                     } else {
-                        // Feche o modal
                         $('#createProfessorExterno').modal('hide');
 
-                        // Atualiza os checkboxs no modal
-                        var professoresCheckboxHTML = '';
-                        $.each(response.professores_externos, function(index, professor) {
-                            var checkboxId = 'professor_externo_' + professor.id;
-                            var isChecked = professoresSelecionadosAntes.includes(professor.id.toString()) ? 'checked' : '';
-                            professoresCheckboxHTML +=
-                            '<div class="form-check">' +
-                            '<input type="checkbox" class="form-check-input" name="professores_externos[]" id="' +
-                                checkboxId + '" value="' + professor.id +'" ' + isChecked + '>' +
-                            '   <label for= "' + checkboxId + '" class="form-check-label">' + professor.nome + ' - '  + professor.filiacao + '</label>' +
-                            '</div>';
-                        });
+                        $('#nome-professor-externo').val('');
+                        $('#filiacao-professor-externo').val('');
 
-                        $('#professores_externos .form-check').remove();
-                        $('#professores_externos').append(professoresCheckboxHTML);
+                        var professor = response.professor_externo;
+                        var novoProfessorHtml = '<div class="form-check d-flex align-items-center" id="professor_externo_container_' + professor.id + '">' +
+                            '<input type="checkbox" class="form-check-input me-2" name="professores_externos[]" ' +
+                            'id="professor_externo_' + professor.id + '" value="' + professor.id + '">' +
+                            '<label for="professor_externo_' + professor.id + '" class="form-check-label text-wrap flex-grow-1">' +
+                            professor.nome + ' - ' + professor.filiacao + '</label>' +
+                            '<button type="button" class="btn btn-sm btn-outline-danger ms-2 delete-professor-externo" ' +
+                            'data-professor-id="' + professor.id + '" ' +
+                            'data-professor-nome="' + professor.nome + '" ' +
+                            'title="Excluir professor externo">' +
+                            '<i class="fas fa-times"></i>' +
+                            '</button>' +
+                            '</div>';
+                        
+                        $('#professores_externos').append(novoProfessorHtml);
+                        
+                        $('#professor_externo_' + professor.id).prop('checked', true);
 
                         var returnToModalSelector = $('#cadastrarProfessorExternoModal').data('return-to-modal');
                         if (returnToModalSelector) {
-                            $(returnToModalSelector).modal('show');  // Mostrar o modal de retorno
+                            setTimeout(function() {
+                                $(returnToModalSelector).modal('show');
+                            }, 300);
                         }
-
-                        // Atualize o <select> na página de edição
-                        // var $selectProfessor = $('#professor_id');
-                        // $selectProfessor.empty(); // Limpe todas as opções
-
-                        // // Adicione as opções atualizadas com base na resposta do servidor
-                        // $.each(response.professores, function(index, professor) {
-                        //     $selectProfessor.append($('<option>', {
-                        //         value: professor.id,
-                        //         text: professor.nome
-                        //     }));
-                        // });
+                        setTimeout(function() {
+                            if (typeof showSuccessMessage === 'function') {
+                                var mensagem = response.mensagem || 'Professor externo cadastrado com sucesso!';
+                                showSuccessMessage(mensagem);
+                            } else {
+                                alert('Professor externo cadastrado com sucesso!');
+                            }
+                        }, 500);
                     }
                 },
+                error: function(xhr, status, error) {
+                    if (xhr.status === 422) {
+                        var errors = xhr.responseJSON.errors;
+                        var errorMessage = '';
+                        for (var field in errors) {
+                            errorMessage += errors[field][0] + '<br>';
+                        }
+                        showErrorMessage(errorMessage, 'Erro de Validação');
+                    } else {
+                        showErrorMessage('Erro ao cadastrar professor externo. Tente novamente.');
+                    }
+                },
+                complete: function() {
+                    isProcessing = false;
+                    $button.prop('disabled', false).text(originalText);
+                }
             });
         });
 
-        function atualizarProfessoresExternos() {
-            $.ajax({
-                type: 'GET',
-                url: "{{ route('professor-externo.index', ['contexto' => 'modal']) }}",
-            });
+        $('#createProfessorExterno').on('hidden.bs.modal', function () {
+            $('body').removeClass('modal-open');
+            $('.modal-backdrop').remove();
+            $('body').css('padding-right', '');
+            $('body').css('overflow', '');
+        });
+        
+        // Função auxiliar para mostrar erros (caso não exista)
+        if (typeof showErrorMessage !== 'function') {
+            window.showErrorMessage = function(message, title = 'Erro') {
+                alert(title + ': ' + message);
+            };
         }
     });
 </script>

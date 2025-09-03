@@ -25,8 +25,24 @@ class ProfileController extends Controller
      */
     public function edit(Request $request): View
     {
+        $user = $request->user();
+        $servidor = $user->servidor;
+        $professor = $servidor ? $servidor->professor : null;
+        
+        // Específico para aluno
+        if ($user->hasRole('aluno')) {
+            $aluno = $user->aluno;
+            
+            return view('profile.edit-aluno', [
+                'user' => $user,
+                'aluno' => $aluno ?? null, // Garantir que não será undefined
+            ]);
+        }
+        
+        // Para professores e outros usuários
         return view('profile.edit', [
-            'user' => $request->user(),
+            'user' => $user,
+            'professor' => $professor,
         ]);
     }
 
@@ -35,19 +51,49 @@ class ProfileController extends Controller
      */
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
+        $user = $request->user();
+        
+        // Se for aluno, usar lógica simplificada
+        if ($user->hasRole('aluno')) {
+            return $this->updateAlunoProfile($request);
+        }
+        
+        // Lógica original para professores
+        return $this->updateProfessorProfile($request);
+    }
+
+    /**
+     * Update aluno profile information
+     */
+    private function updateAlunoProfile(ProfileUpdateRequest $request): RedirectResponse
+    {
+        $user = $request->user();
+        
+        $user->fill($request->validated());
+
+        if ($user->isDirty('email')) {
+            $user->email_verified_at = null;
+        }
+
+        $user->save();
+
+        return Redirect::route('profile.edit')->with('status', 'profile-updated');
+    }
+
+    /**
+     * Update professor profile information  
+     */
+    private function updateProfessorProfile(ProfileUpdateRequest $request): RedirectResponse
+    {
         
         $request->user()->fill($request->validated());
         $user = $request->user(); // Obtenha a instância do usuário
         $servidor = Servidor::where('user_id', $user->id)->first();
         $professor = Professor::where('servidor_id', $servidor->id)->first();
-        $area_prof = AreaProfessor::where('professor_id', $professor->id)->first();
-        $professor->links()->delete();
+        
         
         $user->update([
             'curriculo_lattes' => $request->curriculo_lattes,
-            'titulacao' => $request->titulacao,
-            'biografia' => $request->biografia,
-            'area' => $request->area,
         ]);
 
 
@@ -59,6 +105,7 @@ class ProfileController extends Controller
             $professor->update([
                 'titulacao'=> $request->titulacao,
                 'biografia'=> $request->biografia,
+                'area'=> $request->area,
                 'foto' => $fotos[0]->store('FotoUser/' . $user->id),
             ]);
             //$professor->save();
@@ -66,29 +113,37 @@ class ProfileController extends Controller
             $professor->update([
                 'titulacao'=> $request->titulacao,
                 'biografia'=> $request->biografia,
+                'area'=> $request->area,
             ]);
         }
 
-        $area_prof->update([
-            'area' => $request->area,
-        ]);
+        // Removido: AreaProfessor::updateOrCreate - agora o campo area está na tabela professor
+        
+        //nova forma de salvar os links na nova tabela LINK
+        $curriculo = CurriculoProfessor::firstOrCreate(
+        ['professor_id' => $professor->id]);
 
-         //Currículo_Professor
-         if ($request->input("links")) {
-            $links = $request->input("links");
-            $i=0;
-            foreach ($links as $link) {
-                $curriculoProfessor = new CurriculoProfessor();
-                $curriculoProfessor->curriculo = ' ';
-                $curriculoProfessor->link = $links[$i];
-                $curriculoProfessor->professor_id = $professor->id;
-                $curriculoProfessor->save();
-                unset($curriculoProfessor);
-                $i++;
+        if ($request->has('links')) {
+            foreach ($request->input('links') as $linkId => $linkUrl) {
+                $link = \App\Models\Link::find($linkId);
+                if ($link && $link->curriculo_professor_id == $curriculo->id) {
+                //Se o usuário limpou o campo, apaga o link
+                    if (empty($linkUrl)) {
+                    $link->delete();
+                    }else{
+                        $link->update(['link' => $linkUrl]);
+                    }
+                }
             }
-            unset($i);
         }
-
+        //criando links
+        if($request->has('new_links')) {
+            foreach($request->input('new_links') as $linkUrl) {
+                if(!empty($linkUrl)) {
+                    $curriculo->links()->firstOrCreate(['link' => $linkUrl]);
+                }
+            }
+        } 
 
         if ($request->user()->isDirty('email')) {
             $request->user()->email_verified_at = null;
@@ -125,6 +180,16 @@ class ProfileController extends Controller
 
         $user = $request->user();
 
+        if ($user->hasRole('coordenador')) {
+        $coordinatorCount = \App\Models\User::role('coordenador')->count();
+            if ($coordinatorCount <= 1) {
+                return back()->withErrors(['password' => 'Você não pode excluir seu perfil porque é o único coordenador do
+                sistema. Por favor, nomeie outro coordenador antes de remover sua conta.'],
+                'userDeletion'
+                );
+            }
+        }
+
         Auth::logout();
 
         $user->delete();
@@ -132,7 +197,7 @@ class ProfileController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return Redirect::to('/');
+        return Redirect::to('noticias');
     }
 
     /**

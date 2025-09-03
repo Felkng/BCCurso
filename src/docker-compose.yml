@@ -9,6 +9,8 @@ services:
       - .:/var/www
       - vendor_data:/var/www/vendor
       - node_modules_data:/var/www/node_modules
+      - ./docker-config/php/php.ini:/usr/local/etc/php/conf.d/custom.ini
+      - /var/www/public/build
     networks:
       - laravel_network
     ports:

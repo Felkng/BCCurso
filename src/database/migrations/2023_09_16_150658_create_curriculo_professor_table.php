@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('professor_id')->constrained(
                 table: 'professor'
-            );
+            )->onDelete('cascade');
             $table->string('curriculo');
             $table->string('link');
             $table->timestamps();

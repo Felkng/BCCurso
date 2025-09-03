@@ -3,17 +3,28 @@
 @section('title', 'Gerenciar PPC')
 
 @section('content')
-<div class="container mt-4">
-    <div>
-        <div class="col-md-12">
-            <div class="card">
-                <div class="card-header text-white div-form">
-                    PPCs
-                    <a href="{{ route('ppc.create', ['cursoId' => $curso->id]) }}" class="btn btn-primary">Criar Novo PPC</a>
-                </div>
+<div class="page-header">
+    <div class="container">
+        <div class="title-container">
+            <div class="page-title">
+                <i class="fas fa-file-pdf fa-2x"></i>
+                <h2>PPCs</h2>
+            </div>
+        </div>
+    </div>
+</div>
 
-                <div class="card-body">
-                    <table id="cursoTable" class="table table-hover">
+<div class="container">
+    <div class="content-card">
+        <div class="card-header">
+            <span>PPCs</span>
+            <a href="{{ route('ppc.create', ['cursoId' => $curso->id]) }}" class="btn btn-cadastrar">
+                <i class="fas fa-plus"></i> Criar Novo PPC
+            </a>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table id="cursoTable" class="table data-table">
                         <thead>
                             <tr>
                                 <th>PPC</th>

@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string("biografia")->nullable();
             $table->foreignId('servidor_id')->constrained(
                 table: 'servidor'
-            );
+            )->onDelete('cascade');
             $table->string("foto")->nullable();
             $table->timestamps();
         });

@@ -1,0 +1,166 @@
+/* Estilo para mensagens de alerta */
+.alert-container {
+  position: fixed;
+  top: 1.5rem;
+  right: 1.5rem;
+  z-index: 9999;
+  width: 350px;
+  max-width: calc(100vw - 2rem);
+  pointer-events: none;
+}
+
+.alert {
+  border: none;
+  border-radius: var(--border-radius-md);
+  padding: 1rem 1.5rem;
+  margin-bottom: 1rem;
+  position: relative;
+  box-shadow: var(--shadow-lg);
+  animation: slideInRight 0.4s ease-out forwards;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  pointer-events: auto;
+  max-width: 100%;
+  background-color: var(--primary-blue);
+  color: var(--text-light);
+}
+
+.alert-dismissible {
+  padding-right: 3.5rem;
+}
+
+.alert-dismissible .btn-close {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  padding: 0.5rem;
+  background: none;
+  border: none;
+  opacity: 0.9;
+  transition: opacity var(--transition-fast);
+  cursor: pointer;
+  color: var(--text-light);
+  font-size: 1.2rem;
+}
+
+.alert-dismissible .btn-close:hover {
+  opacity: 1;
+  color: #ffffff;
+}
+
+.alert::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 5px;
+  border-radius: var(--border-radius-md) 0 0 var(--border-radius-md);
+}
+
+.alert-icon {
+  font-size: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.alert-content {
+  flex: 1;
+}
+
+.alert-title {
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+  font-size: 1.1rem;
+}
+
+.alert-message {
+  margin-bottom: 0;
+}
+
+/* Estilos para tipos específicos de alerta */
+.alert-success {
+  background-color: var(--primary-blue);
+  color: var(--text-light);
+  border-left: 5px solid var(--accent-green);
+}
+
+.alert-success::before {
+  display: none;
+}
+
+.alert-success .alert-icon {
+  color: var(--accent-green);
+}
+
+.alert-danger {
+  background-color: var(--primary-blue);
+  color: var(--text-light);
+  border-left: 5px solid #dc3545;
+}
+
+.alert-danger::before {
+  display: none;
+}
+
+.alert-danger .alert-icon {
+  color: #dc3545;
+}
+
+.alert-warning {
+  background-color: var(--primary-blue);
+  color: var(--text-light);
+  border-left: 5px solid #ffc107;
+}
+
+.alert-warning::before {
+  display: none;
+}
+
+.alert-warning .alert-icon {
+  color: #ffc107;
+}
+
+.alert-info {
+  background-color: var(--primary-blue);
+  color: var(--text-light);
+  border-left: 5px solid var(--light-blue);
+}
+
+.alert-info::before {
+  display: none;
+}
+
+.alert-info .alert-icon {
+  color: var(--light-blue);
+}
+
+/* Animação */
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideOutRight {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(110%);
+    opacity: 0;
+  }
+}
+
+/* Classe para animação de saída */
+.alert-fade-out {
+  animation: slideOutRight 0.5s ease-out forwards;
+}

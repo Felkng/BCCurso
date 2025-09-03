@@ -1,86 +1,117 @@
-<meta name="csrf-token" content="{{ csrf_token() }}">
-<div class="modal fade" id="createAluno" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-        <div class="modal-content">
+<div class="modal fade" id="createAluno" tabindex="-1" aria-labelledby="createAlunoLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content rounded-4">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLongTitle">Cadastrar aluno</h5>
-                <button type="button" class="close btn btn-lg" data-bs-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+                <h5 class="modal-title" id="createAlunoLabel">
+                    <i class="fas fa-user-plus"></i> Cadastrar Novo Aluno
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <div class="form-group">
-                    <label for="nome">Nome</label>
-                    <input type="text" name="nome" id="nome" class="form-control" placeholder="Nome do aluno">
-                </div>
+                <div id="modal_aluno_success" class="alert alert-success rounded-3" style="display:none;"></div>
+                <div id="modal_aluno_errors" class="alert alert-danger rounded-3" style="display:none;"></div>
+
+                <form id="form_create_aluno_modal" method="post" action="{{ route('aluno.store') }}">
+                    @csrf
+                    <input type="hidden" name="contexto" value="modal">
+                    <div class="mb-3">
+                        <label for="modal_aluno_nome" class="form-label">Nome*:</label>
+                        <input type="text" name="nome" id="modal_aluno_nome" class="form-control"
+                            placeholder="Nome completo do aluno" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="modal_aluno_email" class="form-label">Email*:</label>
+                        <input type="email" name="email" id="modal_aluno_email" class="form-control"
+                            placeholder="melhor@email.com" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="modal_aluno_matricula" class="form-label">Matrícula*:</label>
+                        <input type="text" name="matricula" id="modal_aluno_matricula" class="form-control"
+                            placeholder="Número da matrícula" required>
+                    </div>
+                </form>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                <button type="button" class="btn custom-button" data-bs-dismiss="modal" id="cadastrarAlunoButton">Cadastrar</button>
+                <button type="submit" class="btn btn-primary" id="submit_button_aluno"
+                    form="form_create_aluno_modal">Cadastrar</button>
             </div>
         </div>
     </div>
 </div>
 
 <script>
-    $(document).ready(function() {
-        $('#cadastrarAlunoButton').click(function() {
-            var nome = $('#nome').val();
-            if (nome.trim() === '') {
-                alert('Por favor, insira o nome do aluno.');
-                return;
-            }
+$(document).ready(function() {
+    $('#form_create_aluno_modal').on('submit', function(event) {
+        event.preventDefault();
 
-            var alunosSelecionadosAntes = [];
-            $('input[name="alunos[]"]:checked').each(function() {
-                alunosSelecionadosAntes.push($(this).val());
-            });
+        var form = $(this);
+        var url = form.attr('action');
+        var formData = form.serialize();
+        var submitButton = $('#submit_button_aluno');
 
-            var csrfToken = $('meta[name="csrf-token"]').attr('content');
+        submitButton.prop('disabled', true).html(
+            '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Cadastrando...'
+            );
+        $('#modal_aluno_errors').hide();
+        $('#modal_aluno_success').hide();
 
-            var data = {
-                _token: csrfToken,
-                nome: nome,
-                contexto: 'modal'
-            };
-
-            $.ajax({
-                type: 'POST',
-                url: "{{ route('aluno.store') }}",
-                data: data,
-                success: function(response) {
-
+        $.ajax({
+            type: 'POST',
+            url: url,
+            data: formData,
+            success: function(response) {
+                if (response && response.success) {
+                    // Feche o modal
                     $('#createAluno').modal('hide');
-                    // Atualiza o <select> na página de edição
-                    var $selectAluno = $('#aluno_id');
-                    $selectAluno.empty(); // Limpa todas as opções
+                    
+                    // Limpe o formulário
+                    $('#form_create_aluno_modal')[0].reset();
+                    
+                    // Mostra notificação de sucesso
+                    showSuccessMessage('Aluno cadastrado com sucesso!');
 
-                    // Atualize a lista de alunos no modal "Cadastrar novo aluno"
-                    var alunosCheckboxHTML = '';
+                    $('#aluno_id').append(new Option(response.aluno.nome, response.aluno.id,
+                        true, true)).trigger('change');
+                    
 
-                    // Adicione as checkboxes atualizadas com base na resposta do servidor
-                    $.each(response.alunos, function(index, aluno) {
-                        var checkboxId = 'aluno_' + aluno.id;
-                        var isChecked = alunosSelecionadosAntes.includes(aluno.id.toString()) ? 'checked' : '';
-                        alunosCheckboxHTML +=
-                        '<div class="form-check">' +
-                        '<input type="checkbox" class="form-check-input" name="alunos[]" id="' + checkboxId + '" value="' + aluno.id + '" '+ isChecked + '>' +
-                        '<label for="' + checkboxId + '" class="form-check-label">' + aluno.nome + '</label>' +
-                        '</div>';
+                } else {
+                    showErrorMessage('A resposta do servidor não indicou sucesso.');
+                }
+            },
+            error: function(jqXHR) {
+                var errorMessage = '';
+                if (jqXHR.status === 422) {
+                    var errors = jqXHR.responseJSON.errors;
+                    $.each(errors, function(key, value) {
+                        errorMessage += value + '<br>';
                     });
-
-                    $('#alunos .form-check').remove();
-                    $('#alunos').append(alunosCheckboxHTML);
-
-                    // Adicione as opções atualizadas com base na resposta do servidor
-                    $.each(response.alunos, function(index, aluno) {
-                        $selectAluno.append($('<option>', {
-                            value: aluno.id,
-                            text: aluno.nome
-                        }));
-                    });
-                },
-            });
+                    showErrorMessage(errorMessage, 'Erro de Validação');
+                } else {
+                    var serverMessage = 'Por favor, tente novamente.';
+                    if (jqXHR.responseJSON && jqXHR.responseJSON.message) {
+                        serverMessage = jqXHR.responseJSON.message;
+                    }
+                    showErrorMessage('Ocorreu um erro inesperado. ' + serverMessage);
+                }
+            },
+            complete: function() {
+                submitButton.prop('disabled', false).html('Cadastrar');
+            }
         });
     });
+
+    $('#createAluno').on('hidden.bs.modal', function() {
+        $('#modal_aluno_errors').hide();
+        $('#modal_aluno_success').hide();
+        $('#form_create_aluno_modal').trigger('reset').show();
+        $('#createAluno .modal-footer').show();
+        
+        // Fix para restaurar o scroll da página
+        $('body').removeClass('modal-open');
+        $('.modal-backdrop').remove();
+        $('body').css('padding-right', '');
+        $('body').css('overflow', '');
+    });
+});
 </script>

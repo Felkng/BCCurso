@@ -7,10 +7,13 @@ use App\Models\CurriculoProfessor;
 use App\Models\Professor;
 use App\Models\Servidor;
 use App\Models\User;
+use App\Models\Coordenador;
+use App\Models\Curso;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\DB;
 
 class ProfessorController extends Controller
 {
@@ -64,7 +67,7 @@ class ProfessorController extends Controller
             // Usuário ou servidor com login ou e-mail já existente
             if ($request->contexto == 'modal') {
                 $professores = Professor::all();
-                return response()->json(['error' => 'Professor já cadastrado', 'professores' => $professores]);
+                return response()->json(['error' => 'Email já cadastrado', 'professores' => $professores]);
             } else {
                 return redirect('/professor/create');
             }
@@ -107,9 +110,10 @@ class ProfessorController extends Controller
 
     public function edit($servidor_id)
     {
-        $servidor = Servidor::where('id', $servidor_id)->first();
-        $usuario = User::where('id', $servidor->user_id)->first();
-        return view('professor.edit', ['usuario' => $usuario, 'servidor' => $servidor]);
+
+        $professor = Professor::where('servidor_id', $servidor_id)->with('coordenador')->firstOrFail();
+        $cursos = \App\Models\Curso::all();
+        return view('professor.edit', compact('professor', 'cursos'));
     }
 
     public function update(Request $request, $servidor_id)
@@ -121,11 +125,11 @@ class ProfessorController extends Controller
         $usuario = User::where('id', $servidor->user_id)->first();
 
         $usuarioExists = User::where('email', $request->email)
-            ->where('id', '!=', $usuario->id) // Não deve ser o mesmo usuário
+            ->where('id', '!=', $usuario->id)
             ->exists();
 
         $servidorExists = Servidor::where('email', $request->email)
-            ->where('id', '!=', $servidor->id) // Não deve ser o mesmo servidor
+            ->where('id', '!=', $servidor->id)
             ->exists();
 
         if ($usuarioExists || $servidorExists) {
@@ -143,7 +147,42 @@ class ProfessorController extends Controller
             'email' => strtolower($request->email),
         ]);
 
-        return redirect('/professor')->with('success', "Usuário atualizado com sucesso!");
+        $isCoordenador = $request->has('is_coordenador');
+
+        DB::transaction(function () use ($isCoordenador, $request, $servidor, $usuario){
+
+            if ($isCoordenador) {
+                $request->validate([
+                    'curso_id' => 'required|exists:curso,id',
+                    'horario_atendimento' => 'required|string|max:255',
+                    'email_contato' => 'required|email|max:255',
+                    'sala_atendimento' => 'required|string|max:255',
+                ]);
+
+                Coordenador::updateOrCreate(
+                    ['professor_id' => $servidor->id],
+                    [
+                        'curso_id' => $request->curso_id,
+                        'horario_atendimento' => $request->horario_atendimento,
+                        'email_contato' => $request->email_contato,
+                        'sala_atendimento' => $request->sala_atendimento,
+                    ]
+                );
+
+                $usuario->assignRole(['coordenador']);
+            } else {
+                if ($servidor->coordenador && \App\Models\Coordenador::count() === 1) {
+                    return redirect()->back()->with('error', 'Não é possível remover o último coordenador do sistema.');
+                }
+
+            DB::transaction(function () use ($servidor) {
+                $servidor->coordenador()->delete();
+                $servidor->user->syncRoles(['professor']);
+            });
+            }
+        });
+
+        return redirect()->route('professor.index')->with('success', 'Professor atualizado com sucesso!');
     }
 
     public function destroy($servidor_id)
@@ -157,8 +196,7 @@ class ProfessorController extends Controller
 
             $tipo = "success";
             $mensagem = "Usuário removido com sucesso!";
-
-        } catch(QueryException){
+        } catch (QueryException) {
             $tipo = "error";
             $mensagem = "Professor utilizado no sistema!";
         }

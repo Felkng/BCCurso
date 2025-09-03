@@ -2,16 +2,23 @@
 @section('title', 'Lista de Projetos')
 @section('content')
 
-    <div class="custom-container">
-        <div>
-            <div>
-                <i class="fas fa-envelopes-bulk fa-2x"></i>
-                <h3 class="smaller-font">Projetos</h3>
+    <div class="page-header">
+        <div class="container">
+            <div class="title-container">
+                <div class="page-title">
+                    <i class="fas fa-envelopes-bulk fa-2x"></i>
+                    <h2>Projetos</h2>
+                </div>
+
+                <div class="row campo-busca">
+                    <div class="col-md-12">
+                        <input type="text" id="searchInput" class="form-control" placeholder="Buscar nome do projeto" aria-label="Buscar">
+                    </div>
+                </div>
             </div>
         </div>
     </div>
     <br>
-
     <ul class="nav nav-tabs container" id="myTabs">
         <li class="nav-item nav-item-tcc">
             <a class="nav-link active" id="professor-tab" data-toggle="tab" href="#professor" role="tab"
@@ -76,8 +83,7 @@
                                     @if ($projeto->professor->servidor->nome == $professor)
                                         <li
                                             class="list-group-item tcc-item d-flex justify-content-between align-items-center text-wrap">
-                                            <a
-                                                href="{{ route('projeto.show', ['id' => $projeto->id]) }}">{{ $projeto->titulo }}</a>
+                                            <a href="{{ route('projeto.show', ['id' => $projeto->id]) }}">{{ $projeto->titulo }}</a>
 
                                             @if (date('Y-m-d') > $projeto->data_termino)
                                                 <span class="badge bg-success">Concluído</span>
@@ -166,6 +172,30 @@
             $('#myTabs a').on('click', function(e) {
                 e.preventDefault();
                 $(this).tab('show');
+            });
+        });
+    </script>
+    <script>
+        $(document).ready(function() {
+            $("#searchInput").on("keyup", function() {
+                var searchText = $(this).val().toLowerCase();
+
+                    $('.tcc-item').filter(function() {
+                        var itemText = $(this).find('a').text().toLowerCase();
+                        if (itemText.indexOf(searchText) > -1) {
+                            $(this).removeClass('is-hidden');
+                        } else {
+                            $(this).addClass('is-hidden');
+                        }
+                    });
+
+                    $('.professor-section, .ano-section').each(function() {
+                        if ($(this).find('.tcc-item:not(.is-hidden)').length > 0) {
+                            $(this).show(); // If yes, make sure the group is visible
+                        } else {
+                            $(this).hide(); // If no, hide the entire group
+                        }
+                    });
             });
         });
     </script>

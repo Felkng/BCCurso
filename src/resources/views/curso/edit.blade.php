@@ -34,7 +34,7 @@
 
         <div class="form-group mb-3">
 
-            <label for="titulo" class="form-label"> <br>Nome:</label>
+            <label for="titulo" class="form-label"> <br>Nome*:</label>
             <input class="form-control" type="text" id="nome" name="nome" value="{{ $curso->nome }}" placeholder="Informe o nome do Curso" required>
         </div>
 
@@ -45,7 +45,7 @@
 
         <div class="form-group mb-3">
 
-            <label for="titulo" class="form-label"> <br>Turno:</label>
+            <label for="titulo" class="form-label"> <br>Turno*:</label>
             <select class="form-control" id="turno" name="turno" required>
                 <option value="Matutino" @if($curso->turno == 'Matutino') selected @endif>Matutino</option>
                 <option value="Vespertino" @if($curso->turno == 'Vespertino') selected @endif>Vespertino</option>
@@ -55,17 +55,17 @@
         </div>
         <div class="form-group mb-3">
 
-            <label for="titulo" class="form-label"> <br>Carga Horária:</label>
+            <label for="titulo" class="form-label"> <br>Carga Horária*:</label>
             <input class="form-control" type="number" id="carga_horaria" min="0" max="10000" name="carga_horaria" value="{{ $curso->carga_horaria }}" placeholder="Informe a carga horária" required>
         </div>
         <div class="form-group mb-3">
 
-            <label for="titulo" class="form-label"> <br>Sigla:</label>
+            <label for="titulo" class="form-label"> <br>Sigla*:</label>
             <input class="form-control" type="text" id="sigla" name="sigla" value="{{ $curso->sigla }}" placeholder="Informe a sigla" maxlength="5" required>
         </div>
 
         <div class="form-group mb-3">
-            <label for="modalidade" class="form-label"> <br>Modalidade:</label>
+            <label for="modalidade" class="form-label"> <br>Modalidade*:</label>
 
             <select class="form-control" id="modalidade" name="modalidade" required>
                 <option value="presencial" @if($curso->modalidade == 'presencial') selected @endif >Presencial</option>
@@ -75,7 +75,7 @@
         </div>
 
         <div class="form-group mb-3">
-            <label for="tipo" class="form-label"> <br>Tipo:</label>
+            <label for="tipo" class="form-label"> <br>Tipo*:</label>
 
             <select class="form-control" id="tipo" name="tipo" required>
                 <option value="bacharelado" @if($curso->tipo == 'bacharelado') selected @endif >Bacharelado</option>
@@ -84,14 +84,14 @@
         </div>
 
         <div class="form-group mb-3">
-            <label for="habilitacao" class="form-label"> <br>Habilitação:</label>
+            <label for="habilitacao" class="form-label"> <br>Habilitação*:</label>
             <input class="form-control" type="text" id="habilitacao" name="habilitacao" value="{{ $curso->habilitacao }}" placeholder="Informe a habilitação do curso" maxlength="255" required>
         </div>
 
 
         <div class="form-group mb-3">
 
-            <label for="ano_implementacao" class="form-label"> <br>Ano de implementação:</label>
+            <label for="ano_implementacao" class="form-label"> <br>Ano de implementação*:</label>
             <input class="form-control" type="Number" id="ano_implementacao" value="{{ $curso->ano_implementacao }}" name="ano_implementacao" placeholder="Informe o ano de implementação" min="1900" max="{{ date('Y') }}" required>
         </div>
 
@@ -137,7 +137,7 @@
         </div>
 
         <div class="form-group mb-3">
-            <label for="periodicidade_ingresso" class="form-label"> <br>Periodicidade de ingresso:</label>
+            <label for="periodicidade_ingresso" class="form-label"> <br>Periodicidade de ingresso*:</label>
 
             <select class="form-control" id="periodicidade_ingresso" name="periodicidade_ingresso" required>
                 <option value="anual" @if($curso->periodicidade_ingresso == 'anual') selected @endif>Anual</option>
