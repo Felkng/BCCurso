@@ -141,12 +141,12 @@
                         </div>
                     </div>
                     
-                    @if(isset($user->area) && $user->area)
+                    @if(isset($professor->area) && $professor->area)
                         <div class="info-item">
                             <i class="fas fa-microscope"></i>
                             <div class="info-details">
                                 <span class="info-label">Área de Atuação</span>
-                                <span class="info-value">{{ $user->area }}</span>
+                                <span class="info-value">{{ $professor->area }}</span>
                             </div>
                         </div>
                     @endif
