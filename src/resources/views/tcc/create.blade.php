@@ -164,6 +164,31 @@
 @include('modal.createProfessorExterno')
 
 <script>
+// Global fix para garantir que o scroll seja restaurado após fechar qualquer modal
+$(document).ready(function() {
+    $('.modal').on('hidden.bs.modal', function () {
+        $('body').removeClass('modal-open');
+        $('.modal-backdrop').remove();
+        $('body').css({
+            'padding-right': '',
+            'overflow': ''
+        });
+    });
+    
+    $(document).ajaxComplete(function(event, xhr, settings) {
+        setTimeout(function() {
+            if ($('.modal.show').length === 0) {
+                $('body').removeClass('modal-open');
+                $('.modal-backdrop').remove();
+                $('body').css({
+                    'padding-right': '',
+                    'overflow': ''
+                });
+            }
+        }, 500);
+    });
+});
+
 document.getElementById("banca_id").addEventListener("change", function() {
     var selectedOption = this.options[this.selectedIndex];
     var selectedDate = selectedOption.getAttribute("data-data");
