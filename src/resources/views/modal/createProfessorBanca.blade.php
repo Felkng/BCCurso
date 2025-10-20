@@ -163,5 +163,16 @@
 
         });
 
+        // Reseta o modal para o estado inicial se ele for fechado manualmente
+        $('#createProfessorBanca').on('hidden.bs.modal', function () {
+            $('#nome-professorInterno').val('');
+            $('#email-professorInterno').val('');
+            
+            $('body').removeClass('modal-open');
+            $('.modal-backdrop').remove();
+            $('body').css('padding-right', '');
+            $('body').css('overflow', '');
+        });
+
     });
 </script>

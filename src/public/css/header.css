@@ -212,6 +212,46 @@
   border-color: var(--primary-blue) !important;
 }
 
+/* Destaque do item pai quando está em uma página de subitem (desktop) 
+   Ex: quando acessa /admin/tcc, o item "Administrar" fica destacado 
+   PRIORIDADE MÁXIMA */
+a.nav-link.modern-nav-link.dropdown-toggle.admin-menu.active,
+a.modern-nav-link.dropdown-toggle.admin-menu.active,
+.dropdown > a.dropdown-toggle.admin-menu.active,
+.dropdown a.dropdown-toggle.active,
+a.dropdown-toggle.active,
+.modern-nav-link.dropdown-toggle.active {
+  background-color: var(--primary-blue) !important;
+  color: var(--text-light) !important;
+  box-shadow: var(--shadow-md) !important;
+  transform: translateY(-2px) !important;
+  border: none !important;
+}
+
+/* Remove o efeito ::before quando o dropdown-toggle está ativo */
+a.nav-link.modern-nav-link.dropdown-toggle.admin-menu.active::before,
+a.modern-nav-link.dropdown-toggle.admin-menu.active::before,
+.dropdown > a.dropdown-toggle.admin-menu.active::before,
+.dropdown a.dropdown-toggle.active::before,
+a.dropdown-toggle.active::before,
+.modern-nav-link.dropdown-toggle.active::before {
+  left: -100% !important;
+  display: none !important;
+}
+
+/* Hover no item ativo (desktop) */
+a.nav-link.modern-nav-link.dropdown-toggle.admin-menu.active:hover,
+a.modern-nav-link.dropdown-toggle.admin-menu.active:hover,
+.dropdown > a.dropdown-toggle.admin-menu.active:hover,
+.dropdown a.dropdown-toggle.active:hover,
+a.dropdown-toggle.active:hover,
+.modern-nav-link.dropdown-toggle.active:hover {
+  background-color: var(--secondary-blue) !important;
+  transform: translateY(-3px) !important;
+  box-shadow: var(--shadow-lg) !important;
+  color: var(--text-light) !important;
+}
+
 .modern-dropdown {
   border: none;
   box-shadow: var(--shadow-xl);
@@ -221,6 +261,28 @@
   backdrop-filter: blur(20px);
   border: 1px solid rgba(28, 44, 76, 0.1);
   min-width: 200px;
+  max-height: 70vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+/* Estilização da scrollbar para o dropdown */
+.modern-dropdown::-webkit-scrollbar {
+  width: 6px;
+}
+
+.modern-dropdown::-webkit-scrollbar-track {
+  background: rgba(28, 44, 76, 0.05);
+  border-radius: 10px;
+}
+
+.modern-dropdown::-webkit-scrollbar-thumb {
+  background: rgba(28, 44, 76, 0.2);
+  border-radius: 10px;
+}
+
+.modern-dropdown::-webkit-scrollbar-thumb:hover {
+  background: rgba(28, 44, 76, 0.3);
 }
 
 .modern-dropdown .dropdown-item {
@@ -338,6 +400,28 @@
   border: 1px solid rgba(28, 44, 76, 0.1);
   margin-top: 0.5rem;
   display: none;
+  max-height: 80vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+/* Estilização da scrollbar para o menu mobile */
+.modern-header-simple .navbar-collapse::-webkit-scrollbar {
+  width: 6px;
+}
+
+.modern-header-simple .navbar-collapse::-webkit-scrollbar-track {
+  background: rgba(28, 44, 76, 0.05);
+  border-radius: 10px;
+}
+
+.modern-header-simple .navbar-collapse::-webkit-scrollbar-thumb {
+  background: rgba(28, 44, 76, 0.2);
+  border-radius: 10px;
+}
+
+.modern-header-simple .navbar-collapse::-webkit-scrollbar-thumb:hover {
+  background: rgba(28, 44, 76, 0.3);
 }
 
 .modern-header-simple .navbar-collapse.show {
@@ -393,6 +477,169 @@
   }
 
   .navbar-collapse.d-lg-none:not(.show) {
+    display: none !important;
+  }
+
+  /* ===== HOVER EM MOBILE - BACKGROUND AZUL ===== */
+  
+  /* Remove pseudo-elemento ::before do hover */
+  .modern-header-simple .navbar-collapse .modern-nav-link:hover::before,
+  .modern-header-simple .navbar-collapse .dropdown-toggle:hover::before,
+  .modern-header-simple .navbar-collapse .dropdown.show > .dropdown-toggle:hover::before {
+    display: none !important;
+    left: -100% !important;
+  }
+
+  /* Hover em links normais - background azul */
+  .modern-header-simple .navbar-collapse .modern-nav-link:hover {
+    transform: none !important;
+    box-shadow: none !important;
+    background-color: var(--primary-blue) !important;
+    color: var(--text-light) !important;
+  }
+
+  /* Hover em links ativos mantém o azul */
+  .modern-header-simple .navbar-collapse .modern-nav-link.active:hover {
+    transform: none !important;
+    box-shadow: var(--shadow-md) !important;
+    background-color: var(--primary-blue) !important;
+    color: var(--text-light) !important;
+  }
+
+  /* Hover em TODOS os dropdowns - background azul */
+  .modern-header-simple .navbar-collapse .dropdown-toggle:hover,
+  .modern-header-simple .navbar-collapse a.dropdown-toggle:hover,
+  .modern-header-simple .navbar-collapse .nav-link.dropdown-toggle:hover,
+  .modern-header-simple .navbar-collapse .modern-nav-link.dropdown-toggle:hover,
+  .modern-header-simple .navbar-collapse .dropdown-toggle.admin-menu:hover,
+  .modern-header-simple .navbar-collapse .dropdown.show > .dropdown-toggle:hover,
+  .modern-header-simple .navbar-collapse .dropdown.show > a.dropdown-toggle:hover,
+  .modern-header-simple .navbar-collapse .dropdown.show > .nav-link.dropdown-toggle:hover,
+  .modern-header-simple .navbar-collapse .dropdown.show > .modern-nav-link.dropdown-toggle:hover,
+  .modern-header-simple .navbar-collapse .dropdown.show > .dropdown-toggle.admin-menu:hover {
+    background-color: var(--primary-blue) !important;
+    color: var(--text-light) !important;
+    box-shadow: none !important;
+    border: none !important;
+    transform: none !important;
+  }
+
+  /* Hover em dropdowns ativos também mantém o azul */
+  .modern-header-simple .navbar-collapse .dropdown-toggle.active:hover,
+  .modern-header-simple .navbar-collapse a.dropdown-toggle.active:hover,
+  .modern-header-simple .navbar-collapse .nav-link.dropdown-toggle.active:hover,
+  .modern-header-simple .navbar-collapse .modern-nav-link.dropdown-toggle.active:hover,
+  .modern-header-simple .navbar-collapse .dropdown-toggle.admin-menu.active:hover,
+  .modern-header-simple .navbar-collapse .dropdown.show > .dropdown-toggle.active:hover,
+  .modern-header-simple .navbar-collapse .dropdown.show > a.dropdown-toggle.active:hover,
+  .modern-header-simple .navbar-collapse .dropdown.show > .nav-link.dropdown-toggle.active:hover,
+  .modern-header-simple .navbar-collapse .dropdown.show > .modern-nav-link.dropdown-toggle.active:hover,
+  .modern-header-simple .navbar-collapse .dropdown.show > .dropdown-toggle.admin-menu.active:hover {
+    background-color: var(--primary-blue) !important;
+    color: var(--text-light) !important;
+    box-shadow: var(--shadow-md) !important;
+    border: none !important;
+    transform: none !important;
+  }
+
+  /* :active e :focus também com background azul */
+  .modern-header-simple .navbar-collapse .dropdown-toggle:active,
+  .modern-header-simple .navbar-collapse .dropdown-toggle:focus,
+  .modern-header-simple .navbar-collapse .modern-nav-link:active,
+  .modern-header-simple .navbar-collapse .modern-nav-link:focus {
+    background-color: var(--primary-blue) !important;
+    color: var(--text-light) !important;
+    outline: none !important;
+  }
+
+  .modern-header-simple .navbar-collapse .dropdown-toggle.active:active,
+  .modern-header-simple .navbar-collapse .dropdown-toggle.active:focus {
+    background-color: var(--primary-blue) !important;
+    color: var(--text-light) !important;
+  }
+
+  /* ===== FIM HOVER MOBILE ===== */
+
+  /* Estilos específicos para dropdown admin em mobile */
+  .modern-header-simple .navbar-collapse .dropdown-menu {
+    position: static !important;
+    transform: none !important;
+    box-shadow: none;
+    border: none;
+    padding: 0.5rem 0;
+    background: rgba(28, 44, 76, 0.03);
+    border-radius: var(--border-radius-sm);
+    margin-top: 0.5rem;
+    max-height: none;
+    overflow: visible;
+    display: none;
+    float: none;
+  }
+
+  .modern-header-simple .navbar-collapse .dropdown-menu.show {
+    display: block !important;
+  }
+
+  .modern-header-simple .navbar-collapse .dropdown-menu .dropdown-item {
+    padding-left: 2.5rem;
+    font-size: 0.85rem;
+  }
+
+  /* Estilo para o toggle do dropdown em mobile */
+  .modern-header-simple .navbar-collapse .dropdown-toggle::after {
+    transition: transform 0.3s ease;
+  }
+
+  .modern-header-simple .navbar-collapse .dropdown.show .dropdown-toggle::after {
+    transform: rotate(180deg);
+  }
+
+  /* Destaque quando dropdown está aberto em mobile - COM PRIORIDADE MÁXIMA */
+  .modern-header-simple .navbar-collapse .dropdown.show > .dropdown-toggle,
+  .modern-header-simple .navbar-collapse .dropdown.show > .dropdown-toggle:hover,
+  .modern-header-simple .navbar-collapse .dropdown.show > .dropdown-toggle:active,
+  .modern-header-simple .navbar-collapse .dropdown.show > .dropdown-toggle:focus {
+    background: linear-gradient(135deg, var(--primary-blue), var(--light-blue)) !important;
+    color: var(--text-light) !important;
+    box-shadow: 0 4px 15px rgba(70, 130, 180, 0.4) !important;
+    transform: translateY(0) !important;
+    border: 2px solid rgba(255, 255, 255, 0.3) !important;
+  }
+
+  /* OVERRIDE: Quando dropdown está aberto E tem classe active, mantém azul escuro */
+  .modern-header-simple .navbar-collapse .dropdown.show > .dropdown-toggle.active,
+  .modern-header-simple .navbar-collapse .dropdown.show > .dropdown-toggle.admin-menu.active,
+  .modern-header-simple .navbar-collapse .dropdown.show > .dropdown-toggle:hover.active,
+  .modern-header-simple .navbar-collapse .dropdown.show > .dropdown-toggle:active.active,
+  .modern-header-simple .navbar-collapse .dropdown.show > .dropdown-toggle:focus.active {
+    background: var(--primary-blue) !important;
+    color: var(--text-light) !important;
+    box-shadow: var(--shadow-md) !important;
+    border: none !important;
+    transform: translateY(0) !important;
+  }
+
+  /* Destaque quando está em uma página de subitem (classe active no dropdown-toggle) */
+  .modern-header-simple .navbar-collapse .dropdown .dropdown-toggle.active,
+  .modern-header-simple .navbar-collapse .dropdown .dropdown-toggle.admin-menu.active,
+  .modern-header-simple .navbar-collapse .modern-nav-link.dropdown-toggle.active,
+  .modern-header-simple .navbar-collapse .modern-nav-link.dropdown-toggle.admin-menu.active {
+    background: var(--primary-blue) !important;
+    color: var(--text-light) !important;
+    box-shadow: var(--shadow-md) !important;
+    border: none !important;
+    transform: translateY(0) !important;
+  }
+
+  .modern-header-simple .navbar-collapse .dropdown .dropdown-toggle.active::before,
+  .modern-header-simple .navbar-collapse .dropdown .dropdown-toggle.admin-menu.active::before,
+  .modern-header-simple .navbar-collapse .modern-nav-link.dropdown-toggle.active::before,
+  .modern-header-simple .navbar-collapse .modern-nav-link.dropdown-toggle.admin-menu.active::before,
+  .modern-header-simple .navbar-collapse .dropdown.show > .dropdown-toggle.active::before {
+    display: none !important;
+  }
+
+  .modern-header-simple .navbar-collapse .dropdown.show > .dropdown-toggle::before {
     display: none !important;
   }
 }
@@ -493,5 +740,88 @@
 
   .modern-header-simple .dropdown-menu {
     margin-top: 0;
+  }
+}
+
+/* Suporte para scroll em dispositivos móveis (iOS) */
+.modern-header-simple .navbar-collapse {
+  -webkit-overflow-scrolling: touch;
+}
+
+.modern-dropdown {
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Animação para dropdown em mobile */
+@media (max-width: 991.98px) {
+  .modern-header-simple .navbar-collapse .dropdown-menu {
+    animation: slideDown 0.3s ease-out;
+  }
+
+  @keyframes slideDown {
+    from {
+      opacity: 0;
+      max-height: 0;
+      padding-top: 0;
+      padding-bottom: 0;
+    }
+    to {
+      opacity: 1;
+      max-height: 500px;
+      padding-top: 0.5rem;
+      padding-bottom: 0.5rem;
+    }
+  }
+}
+
+/* Ajustes para dispositivos touch */
+@media (hover: none) and (pointer: coarse) {
+  .modern-header-simple .navbar-collapse {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(28, 44, 76, 0.2) rgba(28, 44, 76, 0.05);
+  }
+
+  .modern-dropdown {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(28, 44, 76, 0.2) rgba(28, 44, 76, 0.05);
+  }
+
+  /* Desabilita completamente hover em dispositivos touch */
+  .modern-nav-link:hover,
+  .dropdown-toggle:hover,
+  .modern-nav-link.dropdown-toggle:hover,
+  a.dropdown-toggle:hover,
+  .nav-link.dropdown-toggle:hover {
+    background: inherit !important;
+    color: inherit !important;
+    transform: none !important;
+    box-shadow: inherit !important;
+  }
+
+  .modern-nav-link.active:hover,
+  .dropdown-toggle.active:hover {
+    background: var(--primary-blue) !important;
+    color: var(--text-light) !important;
+  }
+
+  /* Remove transições em touch para evitar efeitos visuais */
+  .modern-nav-link,
+  .dropdown-toggle {
+    transition: none !important;
+  }
+}
+
+/* Adicional: Remove hover usando apenas toque (sem mouse) */
+@media (pointer: coarse) {
+  .modern-header-simple .navbar-collapse .modern-nav-link:hover,
+  .modern-header-simple .navbar-collapse .dropdown-toggle:hover {
+    background: transparent !important;
+    color: inherit !important;
+  }
+  
+  .modern-header-simple .navbar-collapse .modern-nav-link.active:hover,
+  .modern-header-simple .navbar-collapse .dropdown-toggle.active:hover {
+    background: var(--primary-blue) !important;
+    color: var(--text-light) !important;
   }
 }

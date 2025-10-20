@@ -73,7 +73,7 @@
                     <!-- Menu Integrado ao Perfil -->
                     <div class="navbar-nav-right">
                         <!-- Menu Toggle Button (Mobile Only) -->
-                        <button class="navbar-toggler custom-menu-toggle d-lg-none" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                        <button class="navbar-toggler custom-menu-toggle d-lg-none" type="button" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                             <i class="fas fa-bars"></i>
                         </button>
 
@@ -104,7 +104,46 @@
                             @auth
                                 @if((method_exists(Auth::user(), 'hasRole') && Auth::user()->hasRole('coordenador')) || Auth::user()->id == 1)
                                     <div class="dropdown">
-                                        <a class="nav-link modern-nav-link dropdown-toggle admin-menu {{ request()->is('*/curso*') || request()->is('*/tcc*') || request()->is('*/aluno*') || request()->is('*/banca*') || request()->is('*/projeto*') || request()->is('*/tipo-postagem*') || request()->is('*/disciplina*') || request()->is('*/intencao_matricula*') || request()->is('*/postagem*') || request()->is('*/professor*') ? 'active' : '' }}" href="#" role="button" data-bs-toggle="dropdown">
+                                        <a class="nav-link modern-nav-link dropdown-toggle admin-menu {{ 
+                                            request()->is('admin/curso*') || 
+                                            request()->is('admin/tcc*') || 
+                                            request()->is('admin/aluno*') || 
+                                            request()->is('admin/banca*') || 
+                                            request()->is('admin/projeto*') || 
+                                            request()->is('admin/tipo-postagem*') || 
+                                            request()->is('admin/disciplina*') || 
+                                            request()->is('admin/intencao_matricula*') || 
+                                            request()->is('admin/postagem*') || 
+                                            request()->is('admin/professor*') ||
+                                            request()->routeIs('curso.index') ||
+                                            request()->routeIs('curso.create') ||
+                                            request()->routeIs('curso.edit') ||
+                                            request()->routeIs('tcc.index') ||
+                                            request()->routeIs('tcc.create') ||
+                                            request()->routeIs('tcc.edit') ||
+                                            request()->routeIs('aluno.index') ||
+                                            request()->routeIs('aluno.create') ||
+                                            request()->routeIs('aluno.edit') ||
+                                            request()->routeIs('banca.index') ||
+                                            request()->routeIs('banca.create') ||
+                                            request()->routeIs('banca.edit') ||
+                                            request()->routeIs('projeto.index') ||
+                                            request()->routeIs('projeto.create') ||
+                                            request()->routeIs('projeto.edit') ||
+                                            request()->routeIs('tipo-postagem.index') ||
+                                            request()->routeIs('tipo-postagem.create') ||
+                                            request()->routeIs('tipo-postagem.edit') ||
+                                            request()->routeIs('disciplina.index') ||
+                                            request()->routeIs('disciplina.create') ||
+                                            request()->routeIs('disciplina.edit') ||
+                                            request()->routeIs('intencao_matricula.index') ||
+                                            request()->routeIs('postagem.index') ||
+                                            request()->routeIs('postagem.create') ||
+                                            request()->routeIs('postagem.edit') ||
+                                            request()->routeIs('professor.index') ||
+                                            request()->routeIs('professor.create') ||
+                                            request()->routeIs('professor.edit')
+                                            ? 'active' : '' }}" href="#" role="button" data-bs-toggle="dropdown">
                                             <i class="fas fa-cogs"></i>
                                             <span>Administrar</span>
                                         </a>
@@ -222,7 +261,46 @@
                                 @auth
                                     @if((method_exists(Auth::user(), 'hasRole') && Auth::user()->hasRole('coordenador')) || Auth::user()->id == 1)
                                         <li class="nav-item dropdown">
-                                            <a class="nav-link modern-nav-link dropdown-toggle admin-menu {{ request()->is('*/curso*') || request()->is('*/tcc*') || request()->is('*/aluno*') || request()->is('*/banca*') || request()->is('*/projeto*') || request()->is('*/tipo-postagem*') || request()->is('*/disciplina*') || request()->is('*/intencao_matricula*') || request()->is('*/postagem*') || request()->is('*/professor*') ? 'active' : '' }}" href="#" role="button" data-bs-toggle="dropdown">
+                                            <a class="nav-link modern-nav-link dropdown-toggle admin-menu {{ 
+                                                request()->is('admin/curso*') || 
+                                                request()->is('admin/tcc*') || 
+                                                request()->is('admin/aluno*') || 
+                                                request()->is('admin/banca*') || 
+                                                request()->is('admin/projeto*') || 
+                                                request()->is('admin/tipo-postagem*') || 
+                                                request()->is('admin/disciplina*') || 
+                                                request()->is('admin/intencao_matricula*') || 
+                                                request()->is('admin/postagem*') || 
+                                                request()->is('admin/professor*') ||
+                                                request()->routeIs('curso.index') ||
+                                                request()->routeIs('curso.create') ||
+                                                request()->routeIs('curso.edit') ||
+                                                request()->routeIs('tcc.index') ||
+                                                request()->routeIs('tcc.create') ||
+                                                request()->routeIs('tcc.edit') ||
+                                                request()->routeIs('aluno.index') ||
+                                                request()->routeIs('aluno.create') ||
+                                                request()->routeIs('aluno.edit') ||
+                                                request()->routeIs('banca.index') ||
+                                                request()->routeIs('banca.create') ||
+                                                request()->routeIs('banca.edit') ||
+                                                request()->routeIs('projeto.index') ||
+                                                request()->routeIs('projeto.create') ||
+                                                request()->routeIs('projeto.edit') ||
+                                                request()->routeIs('tipo-postagem.index') ||
+                                                request()->routeIs('tipo-postagem.create') ||
+                                                request()->routeIs('tipo-postagem.edit') ||
+                                                request()->routeIs('disciplina.index') ||
+                                                request()->routeIs('disciplina.create') ||
+                                                request()->routeIs('disciplina.edit') ||
+                                                request()->routeIs('intencao_matricula.index') ||
+                                                request()->routeIs('postagem.index') ||
+                                                request()->routeIs('postagem.create') ||
+                                                request()->routeIs('postagem.edit') ||
+                                                request()->routeIs('professor.index') ||
+                                                request()->routeIs('professor.create') ||
+                                                request()->routeIs('professor.edit')
+                                                ? 'active' : '' }}" href="#" role="button">
                                                 <i class="fas fa-cogs"></i>
                                                 <span>Administrar</span>
                                             </a>
@@ -266,7 +344,7 @@
                                 <!-- Menu de Usuário Mobile -->
                                 @auth
                                     <li class="nav-item dropdown user-menu-mobile">
-                                        <a class="nav-link modern-nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                                        <a class="nav-link modern-nav-link dropdown-toggle" href="#" role="button">
                                             <i class="fas fa-user-circle"></i>
                                             <span>{{ Auth::user()->name }}</span>
                                         </a>
@@ -434,10 +512,8 @@
         </div>
     </footer>
 
-    <!-- Custom JS para Menu Mobile -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Só executar se estivermos em mobile (largura <= 991px)
             function isMobile() {
                 return window.innerWidth <= 991;
             }
@@ -445,40 +521,100 @@
             const menuToggle = document.querySelector('.custom-menu-toggle');
             const mobileMenu = document.querySelector('#navbarNav');
             
-            if (menuToggle && mobileMenu && isMobile()) {
-                menuToggle.addEventListener('click', function(e) {
+            if (menuToggle && mobileMenu) {
+                let menuIsOpen = false;
+                let isProcessing = false;
+                let lastClickTime = 0;
+                
+                function toggleMenu(e) {
                     e.preventDefault();
+                    e.stopPropagation();
+                    e.stopImmediatePropagation();
                     
-                    // Toggle do menu mobile apenas se estivermos em mobile
-                    if (isMobile()) {
-                        mobileMenu.classList.toggle('show');
-                        
-                        // Atualiza o aria-expanded
-                        const expanded = mobileMenu.classList.contains('show');
-                        menuToggle.setAttribute('aria-expanded', expanded);
-                        
-                        // Animação do ícone
-                        const icon = menuToggle.querySelector('i');
-                        if (icon) {
-                            icon.style.transform = expanded ? 'rotate(90deg)' : 'rotate(0deg)';
-                        }
+                    const now = Date.now();
+                    if (now - lastClickTime < 500) {
+                        return;
                     }
+                    lastClickTime = now;
+                    
+                    if (isProcessing) {
+                        return;
+                    }
+                    isProcessing = true;
+                    
+                    if (menuIsOpen) {
+                        mobileMenu.classList.remove('show');
+                        menuToggle.setAttribute('aria-expanded', 'false');
+                        const icon = menuToggle.querySelector('i');
+                        if (icon) icon.style.transform = 'rotate(0deg)';
+                        menuIsOpen = false;
+                    } else {
+                        mobileMenu.classList.add('show');
+                        menuToggle.setAttribute('aria-expanded', 'true');
+                        const icon = menuToggle.querySelector('i');
+                        if (icon) icon.style.transform = 'rotate(90deg)';
+                        menuIsOpen = true;
+                    }
+                    
+                    setTimeout(function() {
+                        isProcessing = false;
+                    }, 400);
+                }
+                
+                menuToggle.removeEventListener('click', toggleMenu);
+                menuToggle.addEventListener('click', toggleMenu, { once: false, capture: true });
+                
+                mobileMenu.addEventListener('click', function(e) {
+                    e.stopPropagation();
                 });
                 
-                // Fecha o menu quando clicar fora dele (apenas mobile)
                 document.addEventListener('click', function(event) {
-                    if (isMobile() && !menuToggle.contains(event.target) && !mobileMenu.contains(event.target)) {
+                    if (isMobile() && 
+                        menuIsOpen &&
+                        !menuToggle.contains(event.target) && 
+                        !mobileMenu.contains(event.target)) {
                         mobileMenu.classList.remove('show');
                         menuToggle.setAttribute('aria-expanded', 'false');
                         const icon = menuToggle.querySelector('i');
                         if (icon) {
                             icon.style.transform = 'rotate(0deg)';
                         }
+                        menuIsOpen = false;
                     }
                 });
             }
             
-            // Garantir que o menu mobile seja fechado ao redimensionar para desktop
+            if (isMobile()) {
+                const mobileDropdowns = document.querySelectorAll('#navbarNav .nav-item.dropdown');
+                
+                mobileDropdowns.forEach(function(dropdown) {
+                    const toggle = dropdown.querySelector('.dropdown-toggle');
+                    const menu = dropdown.querySelector('.dropdown-menu');
+                    
+                    if (toggle && menu) {
+                        if (toggle.classList.contains('active')) {
+                            menu.classList.add('show');
+                        }
+                        
+                        toggle.addEventListener('click', function(e) {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            
+                            mobileDropdowns.forEach(function(otherDropdown) {
+                                if (otherDropdown !== dropdown) {
+                                    const otherMenu = otherDropdown.querySelector('.dropdown-menu');
+                                    if (otherMenu) {
+                                        otherMenu.classList.remove('show');
+                                    }
+                                }
+                            });
+                            
+                            menu.classList.toggle('show');
+                        });
+                    }
+                });
+            }
+            
             window.addEventListener('resize', function() {
                 if (!isMobile() && mobileMenu) {
                     mobileMenu.classList.remove('show');
@@ -489,8 +625,31 @@
                             icon.style.transform = 'rotate(0deg)';
                         }
                     }
+                    
+                    const allDropdowns = document.querySelectorAll('#navbarNav .dropdown-menu');
+                    allDropdowns.forEach(function(menu) {
+                        menu.classList.remove('show');
+                    });
                 }
             });
+
+            if (!isMobile()) {
+                const desktopDropdowns = document.querySelectorAll('#desktopNav .dropdown');
+                desktopDropdowns.forEach(function(dropdown) {
+                    const toggle = dropdown.querySelector('.dropdown-toggle');
+                    const menu = dropdown.querySelector('.dropdown-menu');
+                    
+                    if (toggle && menu && toggle.classList.contains('active')) {
+                        dropdown.addEventListener('mouseenter', function() {
+                            menu.classList.add('show');
+                        });
+                        
+                        dropdown.addEventListener('mouseleave', function() {
+                            menu.classList.remove('show');
+                        });
+                    }
+                });
+            }
         });
     </script>
 

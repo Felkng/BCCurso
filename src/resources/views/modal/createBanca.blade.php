@@ -132,7 +132,6 @@
             data: data,
             success: function(response) {
                 loading();
-                console.log(response);
                 
                 if (response.error) {
                     loaded();
@@ -235,6 +234,13 @@
         $('#textPresidente').val('');
         $('#form_create_banca_content').show();
         $('#buttons').show();
+        $('#modal_banca_errors').hide();
+        $('#modal_banca_success').hide();
+        
+        $('body').removeClass('modal-open');
+        $('.modal-backdrop').remove();
+        $('body').css('padding-right', '');
+        $('body').css('overflow', '');
     });
 });
 </script>
