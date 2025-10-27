@@ -22,11 +22,11 @@ O principal objetivo do **Portal Ciência da Computação** é fortalecer a comu
 | <img src="https://github.com/CauaRibeiroXY.png" width="60px;"/><br /> | Cauã Ribeiro  | https://github.com/CauaRibeiroXY | Desenvolvedor Front-end, Desenvolvedor Back-end, Responsável pela implantação do servidor |
 | <img src="https://github.com/yodemisj.png" width="60px;"/><br /> | Yodemis Júnior  | https://github.com/yodemisj |  Desenvolvedor Back-end |
 | <img src="https://github.com/Lucasfgm.png" width="60px;"/><br /> | Lucas Flávio | https://github.com/Lucasfgm |  Desenvolvedor Back-end |
-| <img src="https://github.com/MatteusFelippe.png" width="60px;"/><br /> | Matteus Felippe | https://github.com/MatteusFelippe |  Desenvolvedor Back-end, Desemvolvedor Front-end |
+| <img src="https://github.com/MatteusFelippe.png" width="60px;"/><br /> | Matteus Felippe | https://github.com/MatteusFelippe |  Desenvolvedor Back-end, Desenvolvedor Front-end |
 | <img src="https://github.com/RianAL25.png" width="60px;"/><br /> | Rian Alves | https://github.com/RianAL25 |  Desenvolvedor Back-end, Tester |
 | <img src="https://github.com/Gustavornd.png" width="60px;"/><br /> | Gustavo Rafael | https://github.com/Gustavornd |  |
 | <img src="https://github.com/Macedo-SF.png" width="60px;"/><br /> | Saulo Macedo | https://github.com/Macedo-SF |  |
-
+| <img src="https://github.com/Felkng.png" width="60px;"/><br /> | Felipe Ferreira | https://github.com/Felkng |  Desenvolvedor Back-end, Desenvolvedor Front-end |
 
  
 
