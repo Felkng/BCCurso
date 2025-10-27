@@ -26,7 +26,9 @@ O principal objetivo do **Portal Ciência da Computação** é fortalecer a comu
 | <img src="https://github.com/RianAL25.png" width="60px;"/><br /> | Rian Alves | https://github.com/RianAL25 |  Desenvolvedor Back-end, Tester |
 | <img src="https://github.com/Gustavornd.png" width="60px;"/><br /> | Gustavo Rafael | https://github.com/Gustavornd |  |
 | <img src="https://github.com/Macedo-SF.png" width="60px;"/><br /> | Saulo Macedo | https://github.com/Macedo-SF |  |
+| <img src="https://github.com/MarcosMMarques.png" width="60px;"/><br /> | Marcos Marques | https://github.com/MarcosMMarques | Desenvolvedor Full Stack |
 | <img src="https://github.com/Felkng.png" width="60px;"/><br /> | Felipe Ferreira | https://github.com/Felkng |  Desenvolvedor Back-end, Desenvolvedor Front-end |
+
 
  
 
